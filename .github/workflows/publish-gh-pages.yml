@@ -10,6 +10,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+        with:
+          submodules: recursive  # 'themes/xxx' uses submodules. Set 'recursive' in case some theme itself also uses submodule.
       - name: Use Node.js 12.x
         uses: actions/setup-node@v1
         with:
