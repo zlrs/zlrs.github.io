@@ -45,6 +45,74 @@
 </header>
   <div id="content" class="inner">
     <div id="main-col" class="alignleft"><div id="wrapper">
+  <article id="post-NSURLRequest网络调试技巧" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time class="dt-published" datetime="2021-07-28T18:39:34.000Z"><a href="/2021/07/28/NSURLRequest%E7%BD%91%E7%BB%9C%E8%B0%83%E8%AF%95%E6%8A%80%E5%B7%A7/">2021-07-28</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2021/07/28/NSURLRequest%E7%BD%91%E7%BB%9C%E8%B0%83%E8%AF%95%E6%8A%80%E5%B7%A7/">NSURLRequest网络调试技巧</a></h1>
+  
+
+    </header>
+    <div class="e-content entry" itemprop="articleBody">
+      
+        <h2 id="快速阅读"><a href="#快速阅读" class="headerlink" title="快速阅读"></a>快速阅读</h2><ol>
+<li>本文提供了一个<code>NSURLRequest</code>分类，便于在运行时捕获URL请求对象的请求信息。</li>
+<li>本文介绍了VSCode插件<code>REST Client</code>的使用方法。</li>
+<li>本文介绍了如何将上面两者配合使用，从而方便iOS/macOS客户端同学调试网络请求。</li>
+</ol>
+<p>这个方法原理是先把NSURLRequest以「HTTP格式」或「cURL格式」打印出来，然后利用VSCode的「REST Client」插件或者终端随时修改请求内容，便于调试请求。</p>
+<h2 id="调试准备"><a href="#调试准备" class="headerlink" title="调试准备"></a>调试准备</h2><ol>
+<li> 在客户端代码中添加下面的分类</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br></pre></td><td class="code"><pre><span class="line">@implementation NSURLRequest (DEBUG)</span><br><span class="line"></span><br><span class="line">#ifdef DEBUG</span><br><span class="line"></span><br><span class="line">&#x2F;* 生成VSCode「REST Client」插件所需要的请求格式（HTTP 语言） *&#x2F;</span><br><span class="line"></span><br><span class="line">- (NSString *)debug_VSCodeRESTClientPlugin_HTTP &#123;</span><br><span class="line"></span><br><span class="line">    NSMutableString *result &#x3D; [[NSMutableString alloc] init];</span><br><span class="line"></span><br><span class="line">    [result appendString:[NSString stringWithFormat:@&quot;%@ %@ %@\n&quot;, self.HTTPMethod, self.URL.absoluteString, @&quot;HTTP&#x2F;1.1&quot;]];</span><br><span class="line"></span><br><span class="line">    </span><br><span class="line"></span><br><span class="line">    NSDictionary *fields &#x3D; self.allHTTPHeaderFields;</span><br><span class="line"></span><br><span class="line">    for (NSString *headerName in fields) &#123;</span><br><span class="line"></span><br><span class="line">        NSString *headerVal &#x3D; fields[headerName];</span><br><span class="line"></span><br><span class="line">        [result appendString:[NSString stringWithFormat:@&quot;%@: %@\n&quot;, headerName, headerVal]];</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">        </span><br><span class="line"></span><br><span class="line">    NSString *body &#x3D; [[NSString alloc] initWithData:self.HTTPBody encoding:NSUTF8StringEncoding];</span><br><span class="line"></span><br><span class="line">    [result appendString:[NSString stringWithFormat:@&quot;\n%@\n\n###&quot;, body]];</span><br><span class="line"></span><br><span class="line">    </span><br><span class="line"></span><br><span class="line">    return result;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#x2F;* 生成VSCode「REST Client」插件所需要的请求格式（cURL 格式） *&#x2F;</span><br><span class="line"></span><br><span class="line">- (NSString *)debug_VSCodeRESTClientPlugin_cURL &#123;</span><br><span class="line"></span><br><span class="line">    NSMutableString *result &#x3D; [[NSMutableString alloc] init];</span><br><span class="line"></span><br><span class="line">    [result appendString:[NSString stringWithFormat:@&quot;curl -i -X %@ &quot;, self.HTTPMethod]];</span><br><span class="line"></span><br><span class="line">    [result appendString:[NSString stringWithFormat:@&quot;\&quot;%@\&quot; &quot;, self.URL.absoluteString]];</span><br><span class="line"></span><br><span class="line">    </span><br><span class="line"></span><br><span class="line">    NSDictionary *fields &#x3D; self.allHTTPHeaderFields;</span><br><span class="line"></span><br><span class="line">    for (NSString *headerName in fields) &#123;</span><br><span class="line"></span><br><span class="line">        NSString *headerVal &#x3D; fields[headerName];</span><br><span class="line"></span><br><span class="line">        [result appendString:[NSString stringWithFormat:@&quot;-H \&quot;%@: %@\&quot; &quot;, headerName, headerVal]];</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">        </span><br><span class="line"></span><br><span class="line">    NSString *body &#x3D; [[NSString alloc] initWithData:self.HTTPBody encoding:NSUTF8StringEncoding];</span><br><span class="line"></span><br><span class="line">    [result appendString:[NSString stringWithFormat:@&quot;-d \&quot;%@\&quot;&quot;, body]];</span><br><span class="line"></span><br><span class="line">    </span><br><span class="line"></span><br><span class="line">    return result;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">#endif</span><br><span class="line"></span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li> 在VSCode上安装 <strong>REST Client</strong> 插件</li>
+</ol>
+<p><strong>REST Client</strong> 是一个用于调试网络请求的VSCode插件。其功能和Postman类似。其特点是纯文本操作，不需要用鼠标在GUI上点点点，熟练使用后调试效率较高。</p>
+<p><strong>REST Client</strong> 的使用方式非常简单，在VSCode中新建一个<code>.http</code>或<code>.rest</code>拓展名的文件，然后在文件中书写「HTTP格式」或「cURL格式」的请求代码。点击代码头部或右键菜单中的<code>send Request</code>发送请求，就可以在右侧看到响应了。</p>
+<p><img src="https://raw.githubusercontent.com/Huachao/vscode-restclient/master/images/response.gif"></p>
+<h2 id="使用方法（HTTP-格式）"><a href="#使用方法（HTTP-格式）" class="headerlink" title="使用方法（HTTP 格式）"></a>使用方法（HTTP 格式）</h2><ol>
+<li> 在需要调试的地方调用分类方法，把URL请求对象“捕获”下来</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">NSMutableURLRequest *request &#x3D; xxx;</span><br><span class="line"></span><br><span class="line">NSLog(@&quot;%@&quot;, [request debug_VSCodeRESTClientPlugin_HTTP]);</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li><p> 在VSCode中打开一个http后缀名的文件，把输出的内容贴到xxx.http文件里。<br><img src="https://cdn.zlrs.site/mweb/2021/07/28/16274650141059.jpg"></p>
+</li>
+<li><p> 在右键菜单中点击 sendRequest，就可以发出请求，并在右侧看到服务端的响应了。<br><img src="https://cdn.zlrs.site/mweb/2021/07/28/16274650346776.jpg"></p>
+</li>
+<li><p> 如果请求参数需要调整，直接在文件中修改并重新发送请求即可。比如上面的截图中，服务端查询返回的是一个空数组。这时候我们就可以方便地修改请求query，很快就能查看修改后的效果。</p>
+</li>
+</ol>
+<h2 id="使用方法（cURL格式）"><a href="#使用方法（cURL格式）" class="headerlink" title="使用方法（cURL格式）"></a>使用方法（cURL格式）</h2><ol>
+<li> 打印cURL格式命令</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">NSMutableURLRequest *request &#x3D; xxx;</span><br><span class="line"></span><br><span class="line">NSLog(@&quot;%@&quot;, [request debug_VSCodeRESTClientPlugin_cURL]);</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li> 可以复制到终端中使用，也可以在VSCode「REST Client」插件中调用。<br>通过终端使用:<br><img src="https://cdn.zlrs.site/mweb/2021/07/28/16274650482513.jpg"><br>通过「REST Client」插件使用：<br><img src="https://cdn.zlrs.site/mweb/2021/07/28/16274650604452.jpg"></li>
+</ol>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p>目前只考虑到了HTTPBody为文本的情况，如果HTTPBody是二进制就需要自己修改下分类代码。</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
   <article id="post-inclue-import-and-import-in-Objective-C" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   
   <div class="post-content">
@@ -161,6 +229,8 @@
   <ul class="entry">
   
     <li><a href="/tags/iOS-Objective-C-WWDC/">iOS Objective-C WWDC</a><small>1</small></li>
+  
+    <li><a href="/tags/%E7%BD%91%E7%BB%9C-iOS-macOS/">网络 iOS macOS</a><small>1</small></li>
   
   </ul>
 </div>
