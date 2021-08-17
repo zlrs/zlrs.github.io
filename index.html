@@ -84,7 +84,7 @@
 </li>
 </ul>
 <h2 id="讨论实现：完全使用单例模式来实现"><a href="#讨论实现：完全使用单例模式来实现" class="headerlink" title="讨论实现：完全使用单例模式来实现"></a>讨论实现：完全使用单例模式来实现</h2><p>经过以上两步我们分析完了AppLog SDK的功能点，并分出了用户界面层、数据库访问层、上报服务层和应用生命周期埋点层。我简单花了一个层级图表示层间的关系。（这张图不能完全反映软件的真实关系，比如若用户有手动触发上报的需求，则用户页面也需要依赖上报服务的上报接口，从而用户界面画成“L形”会更合适。但是这并不妨碍我们接下来的分析。）</p>
-<p> <img src="media/16289268309087/16289281989139.jpg" alt="我们划分出的软件层级"></p>
+<p> <img src="https://cdn.zlrs.site/mweb/2021/08/14/16289281989139.jpg" alt="我们划分出的软件层级"></p>
 <p> 因为每个层最少使用一个对象就可以完成，所以我们很容易想到用每个层都用一个单例。可以定义以下单例：</p>
 <ul>
 <li>[AppLogSDK sharedInstance]</li>
@@ -109,7 +109,7 @@
 </blockquote>
 <p>在功能上，SDK的各个功能是由各个子模块的功能所组成的。在程序结构上，SDK的主类对象也可以是由多个子模块的对象所组成。成员类型可以是Inteface或者抽象类。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">class AppLogSDKImpl &#123;</span><br><span class="line">   &#x2F;&#x2F; instance properties</span><br><span class="line">   AppLogDAOInteface dao,</span><br><span class="line">   AppLogReportServiceInteface reportService,</span><br><span class="line">   AppLogAppLifeCycleTrackInteface lifeCycleTrack</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><img src="media/16289268309087/16289382645371.jpg" alt="组合设计模式形成的树形成员关系图"></p>
+<p><img src="https://cdn.zlrs.site/mweb/2021/08/14/16289382645371.jpg" alt="组合设计模式形成的树形成员关系图"></p>
 <p>相比单例，这带来了以下好处</p>
 <ul>
 <li>方便搞清类间依赖关系。只需要阅读类的接口代码，就能知道其依赖。相关工具的开发也因此简便。</li>
