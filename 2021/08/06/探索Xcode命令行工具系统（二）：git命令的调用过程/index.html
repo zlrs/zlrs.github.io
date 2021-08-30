@@ -1,0 +1,189 @@
+<!DOCTYPE HTML>
+<html lang="zh_CN">
+<head>
+  <meta charset="utf-8">
+  
+  <title>探索Xcode命令行工具系统（二）：git命令的调用过程 | zlrs - blog</title>
+  <meta name="author" content="zlrs">
+  
+  <meta name="description" content="上一节我们介绍了Xcode和Command Line Tools。git是Command Line Tools的一部分（更准确地说，是其中BSD Tools的一部分）。这一节我们通过git命令来追踪Command Line Tools是怎么调用的。
+直接查看git命令的位置，可以发现是位于/usr/">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="探索Xcode命令行工具系统（二）：git命令的调用过程"/>
+  <meta property="og:site_name" content="zlrs - blog"/>
+
+  
+    <meta property="og:image" content=""/>
+  
+
+  <link rel="shortcut icon" href="/favicon.png">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <!--[if lt IE 9]><script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script><![endif]-->
+  
+
+<meta name="generator" content="Hexo 5.3.0"></head>
+
+
+<body>
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">zlrs - blog</a></h1>
+  <h2><a href="/"></a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="/null">Home</a></li>
+    
+      <li><a href="/archives">Archives</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article id="post-探索Xcode命令行工具系统（二）：git命令的调用过程" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time class="dt-published" datetime="2021-08-06T14:39:55.000Z"><a href="/2021/08/06/%E6%8E%A2%E7%B4%A2Xcode%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%B7%A5%E5%85%B7%E7%B3%BB%E7%BB%9F%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9Agit%E5%91%BD%E4%BB%A4%E7%9A%84%E8%B0%83%E7%94%A8%E8%BF%87%E7%A8%8B/">2021-08-06</a></time>
+      
+      
+  
+    <h1 class="p-name title" itemprop="headline name">探索Xcode命令行工具系统（二）：git命令的调用过程</h1>
+  
+
+    </header>
+    <div class="e-content entry" itemprop="articleBody">
+      
+        <p>上一节我们介绍了Xcode和Command Line Tools。<code>git</code>是Command Line Tools的一部分（更准确地说，是其中BSD Tools的一部分）。这一节我们通过<code>git</code>命令来追踪Command Line Tools是怎么调用的。</p>
+<p>直接查看git命令的位置，可以发现是位于<code>/usr/bin/git</code>. </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">zlrs@C02D ~&#x2F;B&#x2F;P&#x2F;b&#x2F;t&#x2F;tulsi (master)&gt; which git </span><br><span class="line">&#x2F;usr&#x2F;bin&#x2F;git</span><br><span class="line">zlrs@C02D ~&#x2F;B&#x2F;P&#x2F;b&#x2F;t&#x2F;tulsi (master)&gt; ls -l (which git)</span><br><span class="line">-rwxr-xr-x  1 root  wheel  137616  1  1  2020 &#x2F;usr&#x2F;bin&#x2F;git</span><br></pre></td></tr></table></figure>
+<p>但是，在未安装Command Line Tools的情况下，虽然<code>/usr/bin/git</code>存在，但是依然无法使用git的。如果调用git，将提示未安装Command Line Tools并exit。</p>
+<p>实际上<code>/usr/bin/git</code>并非真实的git程序。<code>/usr/bin/git</code>只是一个桩，实际上是调用xcrun去执行当前Xcode Developer directory中的git（如<code>/Applications/Xcode.app/Contents/Developer/usr/bin/git</code>）. </p>
+<p>做一个简单的实验，通过DEVELOPER_DIR环境变量指定Xcode Developer directory之后，可以发现xcrun无法找到真正的git命令的路径。<br><img src="https://cdn.zlrs.site/mweb/2021/08/06/16282457725258.jpg" alt="-w734"></p>
+<p>这一点也可以通过追踪<code>/usr/bin/git</code>的系统调用来验证。追踪前需要先移除桩二进制的签名。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mv &#x2F;usr&#x2F;bin&#x2F;git .&#x2F;</span><br><span class="line">sudo codesign --remove-signature .&#x2F;git</span><br><span class="line">sudo dtruss .&#x2F;git -h</span><br></pre></td></tr></table></figure>
+<p><img src="https://cdn.zlrs.site/mweb/2021/08/06/16282465341716.jpg" alt="-w1625"></p>
+<p><img src="https://cdn.zlrs.site/mweb/2021/08/06/16282465142731.jpg" alt="-w1481"></p>
+<p>完整代码见<a target="_blank" rel="noopener" href="https://gist.github.com/zlrs/4aa3f284eb0cb23fb2e1da0b16945814">gist</a>. </p>
+<script src="https://gist.github.com/zlrs/4aa3f284eb0cb23fb2e1da0b16945814.js"></script>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+        
+  <div class="addthis addthis_toolbox addthis_default_style">
+    
+      <a class="addthis_button_facebook_like" fb:like:layout="button_count"></a>
+    
+    
+      <a class="addthis_button_tweet"></a>
+    
+    
+      <a class="addthis_button_google_plusone" g:plusone:size="medium"></a>
+    
+    
+      <a class="addthis_button_pinterest_pinit" pi:pinit:layout="horizontal"></a>
+    
+    <a class="addthis_counter addthis_pill_style"></a>
+  </div>
+  <script src="//s7.addthis.com/js/300/addthis_widget.js"></script>
+
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+<section id="comment">
+  <h1 class="title">Comments</h1>
+
+  
+      <div id="fb-root"></div>
+<script>
+  (function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=123456789012345";
+    fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));
+</script>
+
+<div class="fb-comments" data-href="https://zlrs.github.io/2021/08/06/%E6%8E%A2%E7%B4%A2Xcode%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%B7%A5%E5%85%B7%E7%B3%BB%E7%BB%9F%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9Agit%E5%91%BD%E4%BB%A4%E7%9A%84%E8%B0%83%E7%94%A8%E8%BF%87%E7%A8%8B/index.html" data-num-posts="5" data-width="840" data-colorscheme="light"></div>
+      
+  
+</section>
+
+</div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="Search">
+    <input type="hidden" name="as_sitesearch" value="zlrs.github.io">
+  </form>
+</div>
+
+
+  
+
+  
+<div class="widget tag">
+  <h3 class="title">Tags</h3>
+  <ul class="entry">
+  
+    <li><a href="/tags/iOS-Objective-C-WWDC/">iOS Objective-C WWDC</a><small>1</small></li>
+  
+    <li><a href="/tags/%E7%BD%91%E7%BB%9C-iOS-macOS/">网络 iOS macOS</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2021 zlrs
+  
+</div>
+<div class="clearfix"></div></footer>
+  
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+
+
+<script src="/js/gallery.js"></script>
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+<script>
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+</body>
+</html>
