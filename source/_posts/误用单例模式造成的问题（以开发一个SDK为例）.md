@@ -1,7 +1,7 @@
 ---
 title: 误用单例模式造成的问题（以开发一个SDK为例）
 date: 2021-08-14 18:59:01
-tags:
+tags: ProgramDesign
 ---
 
 这里以开发一个AppLog SDK的例子来说明误用单例模式会造成哪些问题。

@@ -1,7 +1,7 @@
 ---
 title: 探索Xcode命令行工具系统（一）：Xcode和Command Line Tools介绍
 date: 2021-08-06 14:38:57
-tags:
+tags: macOS iOS
 ---
 
 本来标题想用「探索Xcode命令行生态」的，想想“生态”一词用在这里略显浮夸，就改成了“系统”（还有个原因，应该是受到了最近在看的[“系统之美”](https://book.douban.com/subject/11528220/)这本书的影响）。加上“工具”一词，是为了与"Command Line Tools"一词对译。

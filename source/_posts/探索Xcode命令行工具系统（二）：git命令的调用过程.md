@@ -1,7 +1,7 @@
 ---
 title: 探索Xcode命令行工具系统（二）：git命令的调用过程
 date: 2021-08-06 14:39:55
-tags:
+tags: macOS iOS
 ---
 
 上一节我们介绍了Xcode和Command Line Tools。`git`是Command Line Tools的一部分（更准确地说，是其中BSD Tools的一部分）。这一节我们通过`git`命令来追踪Command Line Tools是怎么调用的。
