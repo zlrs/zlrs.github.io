@@ -61,7 +61,11 @@
     </header>
     <div class="e-content entry" itemprop="articleBody">
       
-        <h2 id="C-11型别"><a href="#C-11型别" class="headerlink" title="C++11型别"></a>C++11型别</h2><ul>
+        <h2 id="引入移动语义（move-semantics）的背景"><a href="#引入移动语义（move-semantics）的背景" class="headerlink" title="引入移动语义（move semantics）的背景"></a>引入移动语义（move semantics）的背景</h2><p>C++03（及之前）禁止修改临时对象。然而，在一些情况下，临时对象是可以被修改的。（这里可以的意思是，理论上可以做到这一点，但是语言未实现此操作）。并且如果支持修改临时对象，在某些场合，就不必通过copy ctor构造新对象（这会造成对资源的深拷贝），而是“偷走”临时对象的资源，这可以提高效率。</p>
+<p>为了实现这一点，C++需要提供一种新的构造函数和赋值操作符函数。而为了提供这类函数，C++必须增加一种新的型别。</p>
+<p>因此C++11引入了右值引用这一型别，用来指代（refer to）一个可以被修改的临时对象。同时增加了std::move，用于将一个值的型别强转为右值引用。同时增加了移动构造函数和移动赋值操作符函数。</p>
+<p>在这篇文章里，我们首先观察C++11提供的各种型别，并重点理解右值引用。然后我们会探索<code>std::move</code>的实现。最后文章提供了一个简单的Demo，说明C++11引入移动语义的动机。</p>
+<h2 id="C-11型别"><a href="#C-11型别" class="headerlink" title="C++11型别"></a>C++11型别</h2><ul>
 <li>左值（lvalue）<ul>
 <li>有人称之为“有位置的值”（能取地址）或“有名字的值”。</li>
 <li><code>int x = 5;</code>中的x。能对x取地址，所以x是左值。</li>
@@ -102,7 +106,6 @@
 </ul>
 </li>
 </ul>
-<h2 id="引入移动语义（move-semantics）的背景"><a href="#引入移动语义（move-semantics）的背景" class="headerlink" title="引入移动语义（move semantics）的背景"></a>引入移动语义（move semantics）的背景</h2><p>C++03（及之前）禁止修改临时对象。然而，在一些情况下，临时对象是可以被修改的。（这里可以的意思是，理论上可以做到这一点，但是语言未实现此操作）。并且如果支持修改临时对象，在某些场合，就不必通过copy ctor构造新对象（这会造成对资源的深拷贝），而是“偷走”临时对象的资源，这可以提高效率。<br>因此C++11引入了右值引用，用来指代（refer to）一个可以被修改的临时对象。同时增加了<code>std::move</code>，用于将一个值的型别强转为右值引用。</p>
 <h2 id="std-move"><a href="#std-move" class="headerlink" title="std::move"></a>std::move</h2><p>一个做类型转换的模板函数。将一个值作为std::move的参数的含义是，告诉编译器这个参数是一个可以被“移动”（偷走资源）的对象，暗示这个对象是一个临时对象或之后不会被使用的对象，因此被偷走资源也没有关系。<br>伪代码: </p>
 <blockquote>
 <p>右值引用（去除引用（参数））</p>
@@ -576,6 +579,8 @@
 <div class="widget tag">
   <h3 class="title">Tags</h3>
   <ul class="entry">
+  
+    <li><a href="/tags/C/">C++</a><small>1</small></li>
   
     <li><a href="/tags/ProgramDesign/">ProgramDesign</a><small>1</small></li>
   
