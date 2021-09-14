@@ -6,7 +6,6 @@ tags: Objective-C runtime
 
 > 本文写于2020年5月
 
-# 介绍Objective-C运行时机制
 
 > 本文是去年（2020年）阅读完《Object-oriented programming : an evolutionary approach》后整理的Objective-C runtime 的一些知识。
 > 介绍了OC和SmallTalk-80语言的历史、早期的OC实现、OC中与运行时交互的3种方式、类的实现、消息绑定机制、super关键字与objc_msgSuper、KVO等内容。
@@ -51,7 +50,8 @@ NSObject的一些方法会问询runtime获得信息，一般为类方法。这�
 运行时库函数是C语言接口。其API可分为两种类型。
 - 第一种类型允许你使用C函数去使用部分编译器的能力（allow you to use plain C to replicate what the compiler does when you write Objective-C code）. 
 - 第二种类型 form the basis for functionality exported through the methods of the NSObject class.
-类的实现
+
+## 类的实现
 源码：https://opensource.apple.com/source/objc4/objc4-235/runtime/objc-class.h.auto.html
 ```cpp
 struct objc_class {                        
@@ -165,7 +165,10 @@ Class object_getClass(id obj) {
     if (obj) return obj->getIsa();
     else return Nil;
 }
-方法的实现
+```
+
+## 方法的实现
+```
 源码：https://opensource.apple.com/source/objc4/objc4-235/runtime/objc-class.h.auto.html
 typedef struct objc_method *Method;
 
@@ -239,8 +242,9 @@ Here is roughly how objc_msgSend function works:
 5. Call -forwardingTargetForSelector:. If it returns non-nil, send the message to the returned object instead. Note that return self here will result in an infinite loop.
 6. Call - methodSignatureForSelector:. If it returns non-nil, create an instance of NSInvocation, and pass it to -forwardInvocation:.
 7. The implementation of the given selector cannot be found. It will call -doesNotRecognizeSelector: on the receiving object. The default implementation throws an exception.
+
 ### objc_msgSend
-OC中，消息是在运行时绑定的。编译器做的事情是：
+在OC中，消息是在运行时绑定的。编译器做的事情是：
 1. 将`[receiver message]`消息发送式转换为`objc_msgSend(receiver, selector, arg1, arg2, ...)`函数。
 2. 为每个类和对象建立数据结构，这个数据结构中包括 isa 指针和 class dispatch table（方法名到方法实现地址的查询表）。
 
@@ -381,10 +385,13 @@ NSLog(@"call lowercaseString: %@", [str lowercaseString]);
 NSLog(@"call uppercaseString: %@", [str uppercaseString]);
 ```
 
-### OC的继承
-1. 类 = 私有数据 + 共享操作
-2. 数据的“链接”
-3. 操作的“链接”
+### OC的对象模型
+- 类 = 私有数据 + 共享操作
+- 数据的“链接”
+  - 对象布局
+- 操作的“链接”
+  - 动态派发机制
+
 ### Super
 #### 问题
 ![](https://cdn.zlrs.site/mweb/2021/09/14/16316116657873.jpg)
