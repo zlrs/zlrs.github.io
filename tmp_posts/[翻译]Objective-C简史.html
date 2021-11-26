@@ -1,0 +1,206 @@
+<!DOCTYPE HTML>
+<html lang="zh_CN">
+<head>
+  <meta charset="utf-8">
+  
+  <title>zlrs - blog</title>
+  <meta name="author" content="zlrs">
+  
+  <meta name="description" content="https://medium.com/chmcore/a-short-history-of-objective-c-aff9d2bde8dd
+译者注：作者是硅谷的计算机历史博物馆的馆长。
+A Short History of Objective-C
+To date, users have downl">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+  <meta property="og:site_name" content="zlrs - blog"/>
+
+  
+    <meta property="og:image" content=""/>
+  
+
+  <link rel="shortcut icon" href="/favicon.png">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <!--[if lt IE 9]><script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script><![endif]-->
+  
+
+<meta name="generator" content="Hexo 5.3.0"></head>
+
+
+<body>
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">zlrs - blog</a></h1>
+  <h2><a href="/"></a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="/null">Home</a></li>
+    
+      <li><a href="/archives">Archives</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article id="page-" class="h-entry page" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+  <div class="post-content">
+    <header>
+      
+      
+  
+    <h1 class="p-name title" itemprop="headline name"></h1>
+  
+
+    </header>
+    <div class="e-content entry" itemprop="articleBody">
+      
+        <p><a target="_blank" rel="noopener" href="https://medium.com/chmcore/a-short-history-of-objective-c-aff9d2bde8dd">https://medium.com/chmcore/a-short-history-of-objective-c-aff9d2bde8dd</a></p>
+<p>译者注：作者是硅谷的计算机历史博物馆的馆长。</p>
+<p>A Short History of Objective-C</p>
+<p>To date, users have downloaded over 140 billion apps to their iPhones.¹ The iPhone’s success is tied to its ecosystem of third-party apps. When the App Store debuted in 2008, all apps were written in a programming language that few outside the Apple community had ever used: Objective-C. Since then, Objective-C’s usage has exploded in a gold rush of developers making apps. Although Apple introduced its new Swift language in 2014, most of Apple’s iOS operating system is still written in Objective-C, so it will be on Apple devices for years to come.</p>
+<p>While most programmers discovered Objective-C only during the iPhone app revolution, Objective-C has been around for over 30 years. Objective-C has been the foundation of Apple’s desktop operating system, Mac OS X, since its debut in 2001, and was also the basis for NEXTSTEP — OS X’s immediate ancestor — created by Steve Jobs’ NeXT Computer Inc. However, Objective-C was created neither by Apple nor NeXT. Its origin was a small Connecticut startup in the early 1980s called Stepstone.</p>
+<p>Objective-C’s early history and later evolution at NeXT are not well known, and there are very few available sources. At CHM, we recently acquired an essay on the “History of Objective-C,” co-written by Brad Cox and Steve Naroff, submitted to the third History of Programming Languages Conference in 2007, but never published. I have also conducted an oral history with Cox, the language’s initial creator, and with Blaine Garst, a NeXT engineer who later contributed to Objective-C. These sources, in addition to an earlier interview I conducted with Naroff, are the basis for the following history.</p>
+<p>The ideas that led to Objective-C originated in a division of International Telephone and Telegraph (ITT), where Tom Love and Brad Cox were looking for ways to improve the productivity of programmers. In 1981 a special issue of Byte magazine described a revolutionary new programming language, Smalltalk, that had been developed by Alan Kay’s team at Xerox PARC. Smalltalk represented a radically new way to think about creating programs, which Kay called “object-oriented.” Rather than write a program as a series of actions (“procedures”), which take data as inputs, a program would be re-oriented around the data itself, grouped together inside “objects.” Smalltalk envisioned programs as collections of objects, which would send messages to each other, causing them to invoke “methods” (perform actions). The methods invoked were selected “dynamically,” that is, while the program was running. Thus, a Smalltalk program can modify itself in real-time, in response to user input.</p>
+<p>The 1981 issue of Byte magazine featured Xerox’s Smalltalk, a groundbreaking graphical environment and programming language that introduced object-oriented programming to a large audience.</p>
+<p>Cox saw enormous productivity advantages in a language like Smalltalk. He imagined that it would allow him and Love to create libraries of objects that could be mixed and matched like Legos. Rather than having to write everything from scratch, a programmer could use existing, or “prefabricated,” objects to rapidly create a new program. Cox envisioned a future in which object libraries would be bought and sold, ushering in a software industrial revolution with these “interchangeable” parts.</p>
+<p>Smalltalk, however, had several drawbacks. It was slow, it was Xerox’s technology, and it required all programs written in it to run in a special environment. Cox and Love were committed to using Bell Labs’ UNIX, a relatively open system, with a large existing base of programs written in C. C was a language that made for fast, efficient programs. Cox came up with the idea to marry Smalltalk’s object-oriented ideas with C and published this work in a 1983 paper, calling it the Object-Oriented Precompiler (OOPC). Cox intentionally made it as simple as possible, thinking of it as a “soldering gun” that would weld object-oriented programming onto C. Cox contrasted this with Bell Labs’ new language C++, which also combined C and object-oriented programming, but in a much more complex way, which Cox compared to a fabrication plant.</p>
+<p>After encountering resistance at ITT, and a brief period at Schlumberger, Love and Cox started their own company to bring these ideas to market, originally called Productivity Products International, and later Stepstone. Cox rewrote the OOPC with a new compiler and renamed the language Objective-C. Nevertheless, it still involved a translation of Objective-C code into regular C code. Love specified some aspects of its design, including the decision to make it a hybrid language with two conceptual levels, with higher-level object-oriented code literally bracketed off from procedural C code by square bracket characters.²</p>
+<p>With the company’s focus on selling object libraries written using Objective-C, Cox shifted his focus to these libraries. Stepstone also licensed the Objective-C language to customers, many of whom asked for changes or new features. Cox hired a group to handle the development of the language, and it began to add features like garbage collection and an interpreter. These were underway when Stepstone’s object libraries business dried up and the company folded.</p>
+<p>First licensed by Step-stone to NeXT for the company’s NEXTSTEP operating system, Objective-C would later power Apple’s OS X and iOS operating systems.</p>
+<p>One of Stepstone’s Objective-C customers, however, radically changed the direction and prospects of Objective-C. In 1988 Steve Jobs’ NeXT Computer licensed Objective-C from Stepstone as the language for its NEXTSTEP development environment. Steve Naroff had been hired into Stepstone’s language team in 1986 for his experience with MAINSAIL, a language developed at the Stanford Artificial Intelligence Laboratory. Naroff became NeXT’s biggest advocate within Stepstone and the primary engineer responsible for addressing NeXT’s needs within Objective-C. Ultimately, Naroff left Stepstone to become a NeXT employee, where he was responsible for the Objective-C compiler. In 1995 a failing Stepstone sold the total rights for Objective-C to NeXT, which then went to Apple when it acquired NeXT in late 1996.</p>
+<p>Naroff made significant changes to the language, and as a result, the form Objective-C took under NeXT and later Apple is significantly different than the version originally developed by Cox. Two new signature features would be indelibly associated with Objective-C in later years. The first was called “categories” (today known as “extensions”). Categories allowed programmers to add their own functions to library objects flexibly and globally. Categories were added to Objective-C by Naroff in 1988 to facilitate Interface Builder, a visual programming tool that helped developers create graphical user interface applications more quickly on NEXTSTEP than on other platforms. A second key feature was added by NeXT engineers Blaine Garst and Bertrand Serlet in 1990, called “protocols,” based in part on Garst’s earlier work on modular programming and fast inter-process communication. Garst immediately used this new feature to allow objects to message each other even while distributed over a network. Protocols were later incorporated into Java, which calls the feature “interfaces.”</p>
+<p>These two features built upon a key advantage Objective-C had over C++: a “dynamic runtime.” Inspired by Smalltalk, this system let programmers modify the behavior of objects “dynamically” (meaning while the program was running), enabling them to alter portions of NeXT’s object libraries piecemeal, without breaking them for other programmers. This gave programmers both the flexibility to adapt to the future and compatibility with the past. In addition, NeXT’s Objective-C runtime was more efficient than Smalltalk’s, allowing it to be used across NeXT’s operating system, even where high performance was required.</p>
+<p>This combination of features — categories, protocols, and the dynamic runtime — allowed NeXT to create the AppKit, an object-oriented library for developing graphical applications that is still used by Apple today. Despite NeXT’s low market share, developers who cut their teeth on NeXT machines loved it. NeXT never became the giant success Jobs had envisioned until 1996, when Apple bought NeXT. Since then, software written in Objective-C has powered almost all of its major new products: Mac OS X, the iPhone, iPad, AppleTV, and Apple Watch.</p>
+<p>The story of Objective-C and NeXT shows how much influence users can have on the development of a technology. Until 1995, Objective-C was owned and produced by Stepstone, and NeXT was its user. Nevertheless, NeXT was able to have Objective-C modified to suit its needs, eventually taking over as its developer. Brad Cox and Tom Love were Objective-C’s inventors, but it was Steve Naroff, Blaine Garst, Bertrand Serlet, and others at NeXT who transformed it into the language behind the iPhone today.</p>
+<p>Notes<br>¹ According to Tim Cook in his iPhone 7 launch event on September 7, 2016.<br>² Biancuzzi and Warden, Masters of Programming, 2009, p. 245.</p>
+<p>“A Short History of Objective-C” was published in the Computer History Museum’s 2017 issue of Core magazine.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+        
+  <div class="addthis addthis_toolbox addthis_default_style">
+    
+      <a class="addthis_button_facebook_like" fb:like:layout="button_count"></a>
+    
+    
+      <a class="addthis_button_tweet"></a>
+    
+    
+      <a class="addthis_button_google_plusone" g:plusone:size="medium"></a>
+    
+    
+      <a class="addthis_button_pinterest_pinit" pi:pinit:layout="horizontal"></a>
+    
+    <a class="addthis_counter addthis_pill_style"></a>
+  </div>
+  <script src="//s7.addthis.com/js/300/addthis_widget.js"></script>
+
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+<section id="comment">
+  <h1 class="title">Comments</h1>
+
+  
+      <div id="fb-root"></div>
+<script>
+  (function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=123456789012345";
+    fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));
+</script>
+
+<div class="fb-comments" data-href="https://zlrs.github.io/tmp_posts/[%E7%BF%BB%E8%AF%91]Objective-C%E7%AE%80%E5%8F%B2.html" data-num-posts="5" data-width="840" data-colorscheme="light"></div>
+      
+  
+</section>
+
+</div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="Search">
+    <input type="hidden" name="as_sitesearch" value="zlrs.github.io">
+  </form>
+</div>
+
+
+  
+
+  
+<div class="widget tag">
+  <h3 class="title">Tags</h3>
+  <ul class="entry">
+  
+    <li><a href="/tags/C-C-11/">C++ C++11</a><small>1</small></li>
+  
+    <li><a href="/tags/Objective-C-runtime/">Objective-C runtime</a><small>1</small></li>
+  
+    <li><a href="/tags/Objetive-C-%E5%8E%86%E5%8F%B2/">Objetive-C 历史</a><small>1</small></li>
+  
+    <li><a href="/tags/ProgramDesign/">ProgramDesign</a><small>1</small></li>
+  
+    <li><a href="/tags/iOS-Objective-C-WWDC/">iOS Objective-C WWDC</a><small>1</small></li>
+  
+    <li><a href="/tags/macOS-iOS/">macOS iOS</a><small>3</small></li>
+  
+    <li><a href="/tags/%E7%BD%91%E7%BB%9C-iOS-macOS/">网络 iOS macOS</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2021 zlrs
+  
+</div>
+<div class="clearfix"></div></footer>
+  
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+
+
+<script src="/js/gallery.js"></script>
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+<script>
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+</body>
+</html>

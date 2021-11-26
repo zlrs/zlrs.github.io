@@ -1,0 +1,217 @@
+<!DOCTYPE HTML>
+<html lang="zh_CN">
+<head>
+  <meta charset="utf-8">
+  
+  <title>zlrs - blog</title>
+  <meta name="author" content="zlrs">
+  
+  <meta name="description" content="Analysis on Bazel’s remote caching mechanismWhat is bazel’s remote-caching mechanism? Why do you need it?The bazel’s build cache can save compile time">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+  <meta property="og:site_name" content="zlrs - blog"/>
+
+  
+    <meta property="og:image" content=""/>
+  
+
+  <link rel="shortcut icon" href="/favicon.png">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <!--[if lt IE 9]><script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script><![endif]-->
+  
+
+<meta name="generator" content="Hexo 5.3.0"></head>
+
+
+<body>
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">zlrs - blog</a></h1>
+  <h2><a href="/"></a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="/null">Home</a></li>
+    
+      <li><a href="/archives">Archives</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article id="page-" class="h-entry page" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+  <div class="post-content">
+    <header>
+      
+      
+  
+    <h1 class="p-name title" itemprop="headline name"></h1>
+  
+
+    </header>
+    <div class="e-content entry" itemprop="articleBody">
+      
+        <h1 id="Analysis-on-Bazel’s-remote-caching-mechanism"><a href="#Analysis-on-Bazel’s-remote-caching-mechanism" class="headerlink" title="Analysis on Bazel’s remote caching mechanism"></a>Analysis on Bazel’s remote caching mechanism</h1><h2 id="What-is-bazel’s-remote-caching-mechanism-Why-do-you-need-it"><a href="#What-is-bazel’s-remote-caching-mechanism-Why-do-you-need-it" class="headerlink" title="What is bazel’s remote-caching mechanism? Why do you need it?"></a>What is bazel’s remote-caching mechanism? Why do you need it?</h2><p>The bazel’s build cache can save compile time by reusing outputs produced by previous builds. The build cache is stored locally in the traditional way. However, Bazel allows you to set up a server to be the remote cache for build outputs. This means you can reuse build outputs from machine to machine, which will definitely optimize the compile time of very large codebases. </p>
+<h2 id="What-is-a-cache-key-What-is-it-based-on"><a href="#What-is-a-cache-key-What-is-it-based-on" class="headerlink" title="What is a cache key? What is it based on?"></a>What is a cache key? What is it based on?</h2><p>A cache key uniquely associates to an output artifact of an action.<br>Bazel breaks a build into discrete steps, which are called actions. Each action has inputs, output names, a command line, and environment variables. Required inputs and expected outputs are declared explicitly for each action.<br>Bazel computes a cache key that uniquely defines the action’s output artifacts. Some factors contribute to the generation of the cache key, according to the comment of a Bazel commiter.</p>
+<ul>
+<li>Command line options</li>
+<li>Input files</li>
+<li>Output files</li>
+<li>Environment variables for each action<br>The relative paths, not absolute paths, are used for the cache key.<br>The computation of cache keys<h2 id="Where-are-cache-keys-generated"><a href="#Where-are-cache-keys-generated" class="headerlink" title="Where are cache keys generated?"></a>Where are cache keys generated?</h2>Bazel’s cache keys, in the view of C-S architecture, are originally generated from the client side(i.e. from the bazel command). The cache’s backend can be just plain object storage(such as Google Cloud Storage or Amazon S3).<br>This design makes it possible that<br>(1) the key computation logic resides in the bazel repository.<br>(2) The simplicity of the storage backend. As a result, users can easily utilize handy cloud object storage services or build one of their own.<h2 id="Computation-method"><a href="#Computation-method" class="headerlink" title="Computation method"></a>Computation method</h2>Relevent project paths:</li>
+<li><a target="_blank" rel="noopener" href="https://github.com/bazelbuild/bazel/tree/master/src/main/java/com/google/devtools/build/lib/actions/cache">https://github.com/bazelbuild/bazel/tree/master/src/main/java/com/google/devtools/build/lib/actions/cache</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/bazelbuild/bazel/tree/master/src/main/java/com/google/devtools/build/lib/actions/ActionKeyCacher.java">https://github.com/bazelbuild/bazel/tree/master/src/main/java/com/google/devtools/build/lib/actions/ActionKeyCacher.java</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/bazelbuild/bazel/tree/master/src/main/java/com/google/devtools/build/lib/rules/cpp/CppCompileAction.java">https://github.com/bazelbuild/bazel/tree/master/src/main/java/com/google/devtools/build/lib/rules/cpp/CppCompileAction.java</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/bazelbuild/bazel/tree/master/src/main/java/com/google/devtools/build/lib/util/Fingerprint.java">https://github.com/bazelbuild/bazel/tree/master/src/main/java/com/google/devtools/build/lib/util/Fingerprint.java</a><br><code>ActionCache</code> can be viewed as an object pointer on the client-side, which contains the cache key of the object. Through the cache key, <code>ActionCache</code> points to the object stored in remote-caching server (if the action is cached).<br>The abstract class, <code>ActionKeyCacher</code>, declares the <code>computeKey()</code> interface to compute cache keys. Each concrete action, if it wants to be cached, implements the method based on its own requirement. The implementation must ensure that the cache key is unique between different runs of the action that produce different output. Here is a simple class hierarchy, just to help understand the relationship among classes.<br><img src="media/16379133229260/16379133458344.jpg"></li>
+</ul>
+<p><code>Fingerprint</code> is a cryptographic hash of a message that encodes the representation of an general object. It is used to collect factors contributing to the hash method and generate the cache key.<br>Here is the source code that computes the cache key of a <code>CppCompileAction</code>. It appears the fingerprint object takes (at least) the following data as the hash’s input:</p>
+<ul>
+<li>The actionClassId<ul>
+<li>Identifier for the actual execution time behavior of the action.</li>
+<li>hard-coded in Bazel source code</li>
+</ul>
+</li>
+<li>Action environment</li>
+<li>Command line arguments necessary for cache correctness</li>
+<li>Declared header files in srcs or hdrs</li>
+<li>Declared include directories</li>
+<li>…</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// https://github.com/bazelbuild/bazel/tree/master/src/main/java/com/google/devtools/build/lib/rules/cpp/CppCompileAction.java</span></span><br><span class="line"><span class="comment">/** For actions that discover inputs, the key must include input names. */</span></span><br><span class="line">@Override</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">computeKey</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">    ActionKeyContext actionKeyContext,</span></span></span><br><span class="line"><span class="function"><span class="params">    @Nullable Artifact.ArtifactExpander artifactExpander,</span></span></span><br><span class="line"><span class="function"><span class="params">    Fingerprint fp)</span></span></span><br><span class="line">    throws CommandLineExpansionException, InterruptedException &#123;</span><br><span class="line">  computeKey(</span><br><span class="line">      actionKeyContext,</span><br><span class="line">      fp,</span><br><span class="line">      actionClassId,</span><br><span class="line">      env,</span><br><span class="line">      compileCommandLine.getEnvironment(),</span><br><span class="line">      executionInfo,</span><br><span class="line">      getCommandLineKey(),</span><br><span class="line">      ccCompilationContext.getDeclaredIncludeSrcs(),</span><br><span class="line">      getMandatoryInputs(),</span><br><span class="line">      additionalPrunableHeaders,</span><br><span class="line">      ccCompilationContext.getLooseHdrsDirs(),</span><br><span class="line">      builtInIncludeDirectories,</span><br><span class="line">      inputsForInvalidation,</span><br><span class="line">      cppConfiguration.validateTopLevelHeaderInclusions());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Separated into a helper method so that it can be called from CppCompileActionTemplate.</span></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">computeKey</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">    ActionKeyContext actionKeyContext,</span></span></span><br><span class="line"><span class="function"><span class="params">    Fingerprint fp,</span></span></span><br><span class="line"><span class="function"><span class="params">    UUID actionClassId,</span></span></span><br><span class="line"><span class="function"><span class="params">    ActionEnvironment env,</span></span></span><br><span class="line"><span class="function"><span class="params">    Map&lt;String, String&gt; environmentVariables,</span></span></span><br><span class="line"><span class="function"><span class="params">    Map&lt;String, String&gt; executionInfo,</span></span></span><br><span class="line"><span class="function"><span class="params">    byte[] commandLineKey,</span></span></span><br><span class="line"><span class="function"><span class="params">    NestedSet&lt;Artifact&gt; declaredIncludeSrcs,</span></span></span><br><span class="line"><span class="function"><span class="params">    NestedSet&lt;Artifact&gt; mandatoryInputs,</span></span></span><br><span class="line"><span class="function"><span class="params">    NestedSet&lt;Artifact&gt; prunableHeaders,</span></span></span><br><span class="line"><span class="function"><span class="params">    NestedSet&lt;PathFragment&gt; declaredIncludeDirs,</span></span></span><br><span class="line"><span class="function"><span class="params">    List&lt;PathFragment&gt; builtInIncludeDirectories,</span></span></span><br><span class="line"><span class="function"><span class="params">    NestedSet&lt;Artifact&gt; inputsForInvalidation,</span></span></span><br><span class="line"><span class="function"><span class="params">    boolean validateTopLevelHeaderInclusions)</span></span></span><br><span class="line">    throws CommandLineExpansionException, InterruptedException &#123;</span><br><span class="line">  fp.addUUID(actionClassId);</span><br><span class="line">  env.addTo(fp);</span><br><span class="line">  fp.addStringMap(environmentVariables);</span><br><span class="line">  fp.addStringMap(executionInfo);</span><br><span class="line">  fp.addBytes(commandLineKey);</span><br><span class="line">  fp.addBoolean(validateTopLevelHeaderInclusions);</span><br><span class="line"></span><br><span class="line">  actionKeyContext.addNestedSetToFingerprint(fp, declaredIncludeSrcs);</span><br><span class="line">  fp.addInt(<span class="number">0</span>); <span class="comment">// mark the boundary between input types</span></span><br><span class="line">  actionKeyContext.addNestedSetToFingerprint(fp, mandatoryInputs);</span><br><span class="line">  fp.addInt(<span class="number">0</span>);</span><br><span class="line">  actionKeyContext.addNestedSetToFingerprint(fp, prunableHeaders);</span><br><span class="line"></span><br><span class="line">  <span class="comment">/*</span></span><br><span class="line"><span class="comment">   * getArguments() above captures all changes which affect the compilation command and hence the</span></span><br><span class="line"><span class="comment">   * contents of the object file. But we need to also make sure that we re-execute the action if</span></span><br><span class="line"><span class="comment">   * any of the fields that affect whether &#123;@link #validateInclusions&#125; will report an error or</span></span><br><span class="line"><span class="comment">   * warning have changed, otherwise we might miss some errors.</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  actionKeyContext.addNestedSetToFingerprint(fp, declaredIncludeDirs);</span><br><span class="line">  fp.addPaths(builtInIncludeDirectories);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// This is needed for CppLinkstampCompile.</span></span><br><span class="line">  fp.addInt(<span class="number">0</span>);</span><br><span class="line">  actionKeyContext.addNestedSetToFingerprint(fp, inputsForInvalidation);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="bazel-remote-codebase-structure"><a href="#bazel-remote-codebase-structure" class="headerlink" title="bazel-remote codebase structure"></a>bazel-remote codebase structure</h2><p>bazel-remote is an open source remote build cache that can be used as the backend of Bazel’s remote caching system. It is typically deployed on a remote server. It stores cached data in the disk of the server and submits it to an optional proxy if it’s configured; and provides cached data from the disk or from the same proxy.<br>Bazel-remote provides HTTP and GRPC(optional) service. Let’s focus on the HTTP way since it is more familiar to most people. The principle is the same, though.<br>The HTTP service can handle PUT/GET/HEAD requests from the client(bazel command).<br>For PUT request, the data is stored in the local disk directory configured at program’s initialization with the cache key required by the client, and proxyed to the optional proxy server.<br>For GET request, the local disk directory is searched by the path derived by the cache key required by the client. If a local cache miss occurs, the request is proxyed to the optional proxy server.<br>For HEAD request, which is used to query if server contains a particular cache, the local disk directory is searched first, or the request is handed over to the proxy server if there is a local miss.</p>
+<p><img src="media/16379133229260/16379133905949.jpg"></p>
+<h2 id="Userful-links"><a href="#Userful-links" class="headerlink" title="Userful links"></a>Userful links</h2><ul>
+<li>Official doc covering remote-caching<br><a target="_blank" rel="noopener" href="https://docs.bazel.build/versions/main/remote-caching.html">https://docs.bazel.build/versions/main/remote-caching.html</a></li>
+<li>Bazel committers talk about the factors affecting the generation of hash key.<br><a target="_blank" rel="noopener" href="https://github.com/bazelbuild/bazel/issues/2998#issuecomment-301160663">https://github.com/bazelbuild/bazel/issues/2998#issuecomment-301160663</a></li>
+<li>Discuss threads on the need to use environment variables for an action, and how it can affect caching, and the introduction of –action-env<br><a target="_blank" rel="noopener" href="https://bazel.build/designs/2016/06/21/environment.html">https://bazel.build/designs/2016/06/21/environment.html</a><br><a target="_blank" rel="noopener" href="https://github.com/bazelbuild/bazel/issues/3320">https://github.com/bazelbuild/bazel/issues/3320</a><br><a target="_blank" rel="noopener" href="https://github.com/bazelbuild/bazel/issues/4558">https://github.com/bazelbuild/bazel/issues/4558</a><br><a target="_blank" rel="noopener" href="https://github.com/bazelbuild/bazel/commit/6e940e573d20a3220ac433901c5650ee74226a17?diff=unified">https://github.com/bazelbuild/bazel/commit/6e940e573d20a3220ac433901c5650ee74226a17?diff=unified</a></li>
+<li>An open source remote-caching server for bazel<br><a target="_blank" rel="noopener" href="https://github.com/buchgr/bazel-remote">https://github.com/buchgr/bazel-remote</a></li>
+</ul>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+        
+  <div class="addthis addthis_toolbox addthis_default_style">
+    
+      <a class="addthis_button_facebook_like" fb:like:layout="button_count"></a>
+    
+    
+      <a class="addthis_button_tweet"></a>
+    
+    
+      <a class="addthis_button_google_plusone" g:plusone:size="medium"></a>
+    
+    
+      <a class="addthis_button_pinterest_pinit" pi:pinit:layout="horizontal"></a>
+    
+    <a class="addthis_counter addthis_pill_style"></a>
+  </div>
+  <script src="//s7.addthis.com/js/300/addthis_widget.js"></script>
+
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+<section id="comment">
+  <h1 class="title">Comments</h1>
+
+  
+      <div id="fb-root"></div>
+<script>
+  (function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=123456789012345";
+    fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));
+</script>
+
+<div class="fb-comments" data-href="https://zlrs.github.io/tmp_posts/Analysis%20on%20Bazel&#39;s%20remote%20caching%20mechanism.html" data-num-posts="5" data-width="840" data-colorscheme="light"></div>
+      
+  
+</section>
+
+</div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="Search">
+    <input type="hidden" name="as_sitesearch" value="zlrs.github.io">
+  </form>
+</div>
+
+
+  
+
+  
+<div class="widget tag">
+  <h3 class="title">Tags</h3>
+  <ul class="entry">
+  
+    <li><a href="/tags/C-C-11/">C++ C++11</a><small>1</small></li>
+  
+    <li><a href="/tags/Objective-C-runtime/">Objective-C runtime</a><small>1</small></li>
+  
+    <li><a href="/tags/Objetive-C-%E5%8E%86%E5%8F%B2/">Objetive-C 历史</a><small>1</small></li>
+  
+    <li><a href="/tags/ProgramDesign/">ProgramDesign</a><small>1</small></li>
+  
+    <li><a href="/tags/iOS-Objective-C-WWDC/">iOS Objective-C WWDC</a><small>1</small></li>
+  
+    <li><a href="/tags/macOS-iOS/">macOS iOS</a><small>3</small></li>
+  
+    <li><a href="/tags/%E7%BD%91%E7%BB%9C-iOS-macOS/">网络 iOS macOS</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2021 zlrs
+  
+</div>
+<div class="clearfix"></div></footer>
+  
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+
+
+<script src="/js/gallery.js"></script>
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+<script>
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+</body>
+</html>
