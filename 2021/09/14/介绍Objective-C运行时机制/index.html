@@ -83,7 +83,7 @@
 </li>
 <li>支持在运行时获得对象的信息（反射；自省）</li>
 <li>支持在运行时添加新类、新方法</li>
-<li>如果对象处理不了消息，还可以做消息转发<h2 id="早期（1980s）的OC实现"><a href="#早期（1980s）的OC实现" class="headerlink" title="早期（1980s）的OC实现"></a>早期（1980s）的OC实现</h2>早期的OC就是一个预处理器地位的存在。将面向对象语法翻译为C语言，然后再交给C编译器去编译。<br><img src="https://cdn.zlrs.site/mweb/2021/09/14/16316113089181.jpg"></li>
+<li>如果对象处理不了消息，还可以做消息转发<h2 id="早期（1980s）的OC实现"><a href="#早期（1980s）的OC实现" class="headerlink" title="早期（1980s）的OC实现"></a>早期（1980s）的OC实现</h2>早期的OC就是一个预处理器地位的存在。将面向对象语法翻译为C语言，然后再交给C编译器去编译。<br><img src="https://https//karl1b.blob.core.windows.net/mweb/2021/09/14/16316113089181.jpg"></li>
 </ul>
 <h2 id="runtime-版本"><a href="#runtime-版本" class="headerlink" title="runtime 版本"></a>runtime 版本</h2><p>Runtime 的实体是一个动态链接库(libobjc.dylib)。Objective-C语言很大程度上就是这个动态链接库。这个库主要有两个大版本：</p>
 <ul>
@@ -114,7 +114,7 @@
 <h3 id="关于super-class"><a href="#关于super-class" class="headerlink" title="关于super_class"></a>关于super_class</h3><p>指向父类。</p>
 <h3 id="关于version"><a href="#关于version" class="headerlink" title="关于version"></a>关于version</h3><p>用来标识类的接口的变动，也就是为类的接口打版本。在序列化时特别有用，因为可以用它来表明类的实例变量的布局信息是否发生了变化。NSObject有类方法：setVersion:<br>关于instanceSize<br>alloc函数怎么知道要为实例申请多大的空间？就是看类对象的instanceSize。下面是new操作的一部分代码，节选自NSObject.mm中的static ALWAYS_INLINE id _class_createInstanceFromZone(Class cls, 后面参数省略…)函数</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">size &#x3D; cls-&gt;instanceSize(extraBytes);</span><br><span class="line">if (outAllocatedSize) *outAllocatedSize &#x3D; size;</span><br><span class="line"></span><br><span class="line">id obj;</span><br><span class="line">if (zone) &#123;</span><br><span class="line">    obj &#x3D; (id)malloc_zone_calloc((malloc_zone_t *)zone, 1, size);</span><br><span class="line">&#125; else &#123;</span><br><span class="line">    obj &#x3D; (id)calloc(1, size);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="new方法的早期实现"><a href="#new方法的早期实现" class="headerlink" title="new方法的早期实现"></a>new方法的早期实现</h3><p>节选自《Object-oriented programming : an evolutionary approach》<br><img src="https://cdn.zlrs.site/mweb/2021/09/14/16316112931084.jpg"></p>
+<h3 id="new方法的早期实现"><a href="#new方法的早期实现" class="headerlink" title="new方法的早期实现"></a>new方法的早期实现</h3><p>节选自《Object-oriented programming : an evolutionary approach》<br><img src="https://https//karl1b.blob.core.windows.net/mweb/2021/09/14/16316112931084.jpg"></p>
 <h3 id="关于methodLists"><a href="#关于methodLists" class="headerlink" title="关于methodLists"></a>关于methodLists</h3><ol>
 <li>注意：是methodLists而不是methodsList</li>
 <li>methodLists是多个method List的线性表，其中最后一个元素是base method list，其它元素都是category method list</li>
@@ -152,12 +152,12 @@
 <li>类和对象是一种模板-实例关系。且类和对象相对的概念；对类A的meta class而言，类A也是对象；对NSObject meta class而言，NSString meta class也是对象。NSObject比较特殊，它就是root的类，它不是任何人的对象（superclass指向nil）。</li>
 <li>类方法和实例方法的派发，其实都是一样的。都是先找到receiver的isa，然后再一直向上找super class，直到到达NSObject为止。</li>
 <li>因此所有的方法，包括类方法和实例方法，最终都是派发到NSObject。</li>
-<li>对象的isa指针指向其类对象。类对象的isa指针指向类对象的metaclass对象；super class指针指向超类。metaclass对象的isa指针指向NSObject的metaclas对象。<h3 id="对象图"><a href="#对象图" class="headerlink" title="对象图"></a>对象图</h3><img src="https://cdn.zlrs.site/mweb/2021/09/14/16316113683323.jpg"></li>
+<li>对象的isa指针指向其类对象。类对象的isa指针指向类对象的metaclass对象；super class指针指向超类。metaclass对象的isa指针指向NSObject的metaclas对象。<h3 id="对象图"><a href="#对象图" class="headerlink" title="对象图"></a>对象图</h3><img src="https://https//karl1b.blob.core.windows.net/mweb/2021/09/14/16316113683323.jpg"></li>
 </ol>
-<h3 id="对象图（早期实现）"><a href="#对象图（早期实现）" class="headerlink" title="对象图（早期实现）"></a>对象图（早期实现）</h3><p><img src="https://cdn.zlrs.site/mweb/2021/09/14/16316113769760.jpg"></p>
+<h3 id="对象图（早期实现）"><a href="#对象图（早期实现）" class="headerlink" title="对象图（早期实现）"></a>对象图（早期实现）</h3><p><img src="https://https//karl1b.blob.core.windows.net/mweb/2021/09/14/16316113769760.jpg"></p>
 <p>下面这张图节选自《Object-oriented programming : an evolutionary approach》，其中 Pen Software IC 指的就是Pen类。</p>
-<h3 id="实例的消息派发"><a href="#实例的消息派发" class="headerlink" title="实例的消息派发"></a>实例的消息派发</h3><p><img src="https://cdn.zlrs.site/mweb/2021/09/14/16316113875747.jpg"></p>
-<h3 id="类对象的消息派发"><a href="#类对象的消息派发" class="headerlink" title="类对象的消息派发"></a>类对象的消息派发</h3><p><img src="https://cdn.zlrs.site/mweb/2021/09/14/16316114039154.jpg"></p>
+<h3 id="实例的消息派发"><a href="#实例的消息派发" class="headerlink" title="实例的消息派发"></a>实例的消息派发</h3><p><img src="https://https//karl1b.blob.core.windows.net/mweb/2021/09/14/16316113875747.jpg"></p>
+<h3 id="类对象的消息派发"><a href="#类对象的消息派发" class="headerlink" title="类对象的消息派发"></a>类对象的消息派发</h3><p><img src="https://https//karl1b.blob.core.windows.net/mweb/2021/09/14/16316114039154.jpg"></p>
 <h2 id="动态绑定与消息机制"><a href="#动态绑定与消息机制" class="headerlink" title="动态绑定与消息机制"></a>动态绑定与消息机制</h2><p>这是OC与C最大的不同。C的函数调用，在编译期完成函数绑定，函数地址会直接体现在每次函数调用中。而OC对象是通过消息机制在运行时完成绑定。</p>
 <h3 id="概览"><a href="#概览" class="headerlink" title="概览"></a>概览</h3><p>Here is roughly how objc_msgSend function works:</p>
 <ol>
@@ -204,7 +204,7 @@
 <li>objc_getAssociatedObject</li>
 <li>objc_removeAssociatedObjects</li>
 </ul>
-<h3 id="KVO"><a href="#KVO" class="headerlink" title="KVO"></a>KVO</h3><p>观察者模式<br>原理：通过isa Swizzling添加中间类；中间类重写setter，给观察者发送属性变更通知、重写class方法返回原本的父类以隐藏自己。<br><img src="https://cdn.zlrs.site/mweb/2021/09/14/16316115725874.jpg"></p>
+<h3 id="KVO"><a href="#KVO" class="headerlink" title="KVO"></a>KVO</h3><p>观察者模式<br>原理：通过isa Swizzling添加中间类；中间类重写setter，给观察者发送属性变更通知、重写class方法返回原本的父类以隐藏自己。<br><img src="https://https//karl1b.blob.core.windows.net/mweb/2021/09/14/16316115725874.jpg"></p>
 <h3 id="Method-Swizzling"><a href="#Method-Swizzling" class="headerlink" title="Method Swizzling"></a>Method Swizzling</h3><h4 id="Getting-a-Method’s-Address"><a href="#Getting-a-Method’s-Address" class="headerlink" title="Getting a Method’s Address"></a>Getting a Method’s Address</h4><p>NSObject 的方法, methodForSelector: 传入一个selector，返回一个函数指针。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">void (*setter)(id, SEL, BOOL);</span><br><span class="line">int i;</span><br><span class="line"> </span><br><span class="line">setter &#x3D; (void (*)(id, SEL, BOOL))[target</span><br><span class="line">    methodForSelector:@selector(setFilled:)];</span><br><span class="line">for ( i &#x3D; 0 ; i &lt; 1000 ; i++ )</span><br><span class="line">    setter(targetList[i], @selector(setFilled:), YES);</span><br></pre></td></tr></table></figure>
 <h4 id="Dynamic-loading"><a href="#Dynamic-loading" class="headerlink" title="Dynamic loading"></a>Dynamic loading</h4><p>An Objective-C program can load and link new classes and categories while it’s running. The new code is incorporated into the program and treated identically to classes and categories loaded at the start.<br>NSBundle类为Dynamic loading 提供了接口。<br>在运行时向类中添加方法和方法实现（通过<code>class_addMethod(Class, SEL, IMP, ...)</code>函数），本质上是在类的方法地址查询表中添加记录。<br>Method Swizzling 是在运行时向类中交换两个方法的实现。本质上是交换类的方法地址查询表中的两个键的值。<br>开发者常用此功能向原有实现中添加新功能，如UI自动数据上报。</p>
@@ -226,7 +226,7 @@
 </ul>
 </li>
 </ul>
-<h3 id="Super"><a href="#Super" class="headerlink" title="Super"></a>Super</h3><h4 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h4><p><img src="https://cdn.zlrs.site/mweb/2021/09/14/16316116657873.jpg"></p>
+<h3 id="Super"><a href="#Super" class="headerlink" title="Super"></a>Super</h3><h4 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h4><p><img src="https://https//karl1b.blob.core.windows.net/mweb/2021/09/14/16316116657873.jpg"></p>
 <h4 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h4><p>分析下面这段代码。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">#import &lt;Foundation&#x2F;Foundation.h&gt;</span><br><span class="line"></span><br><span class="line">@implementation TestSuperMessager : NSObject</span><br><span class="line"></span><br><span class="line">- (void)sayHello &#123;</span><br><span class="line">    [self someMethod];</span><br><span class="line">    [super someMethod2];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
 <p>将其重写为C++: <code>clang -rewrite-objc main.m -o testMsg.cpp</code></p>
@@ -352,7 +352,7 @@
   </div>
   <footer id="footer" class="inner"><div class="alignleft">
   
-  &copy; 2021 zlrs
+  &copy; 2024 zlrs
   
 </div>
 <div class="clearfix"></div></footer>
