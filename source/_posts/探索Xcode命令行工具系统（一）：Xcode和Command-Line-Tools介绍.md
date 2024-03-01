@@ -17,7 +17,7 @@ Command Line Tools的全称是 Command Line Tools for Xcode x.x.x，其中x.x.x�
 小结：Xcode和Command Line Tools的关系是：Command Line Tools是Xcode的一部分，但是完全可以单独使用。比如你可以在mac构建机上不安装Xcode APP，只安装Command Line Tools。
 
 为了减少大家每一篇的阅读时间，我把这个系列分成了5篇（暂定）。在下一篇文章里，我将通过探索`git -h`命令运行的例子，来正式开启我们这个系列的学习。
-![-w1302](https://cdn.zlrs.site/mweb/2021/08/06/16282399579998.jpg)
+![-w1302](https://karl1b.blob.core.windows.net/mweb//2021/08/06/16282399579998.jpg)
 
 Reference:
 * [苹果开发者下载中心](https://developer.apple.com/download/all/)

@@ -22,7 +22,7 @@ Mac上的每个Xcode APP都内置了一套工具链。工具链也可以单独�
 toolchain的路径一般在Xcode APP中，如`/Application/Xcode.app/Contents/Developer`（也可以写成`/Application/Xcode.app`，`xcode-select`会自动添加后面的部分）. 或者单独存在。
 
 开发者也可以在Xcode IDE中切换系统级的toolchain（Command Line Tools）. 切换时需要指纹验证来获取sudo权限。其底层应该也是通过调用`xcode-select`实现。
-![-w942](https://cdn.zlrs.site/mweb/2021/08/31/16285887284120.jpg)
+![-w942](https://karl1b.blob.core.windows.net/mweb//2021/08/31/16285887284120.jpg)
 
 **配合桩命令和`xcode-select`，就可以方便地切换toolchain。**
 举个例子：假设我们在编译脚本中存在这样一行

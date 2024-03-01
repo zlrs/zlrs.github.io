@@ -30,13 +30,13 @@ SmallTalk的面向对象是如此的彻底，甚至于连条件判断、循环�
 许多现代概念都可以在古老的SmallTalk中找到，比如metaclass、tagged pointer、消息机制等。
 
 ## ST 语法示例
-![](https://cdn.zlrs.site/mweb/2021/09/14/16315997831842.jpg)
+![](https://karl1b.blob.core.windows.net/mweb//2021/09/14/16315997831842.jpg)
 
 
 ## SmallTalk-80 IDE
 ST 的 IDE 对现代 IDE 也影响深远
 ST-80 IDE已经具备了代码编辑、文件浏览器、符号浏览器等基础功能：
-![](https://cdn.zlrs.site/mweb/2021/09/14/16315998877426.jpg)
+![](https://karl1b.blob.core.windows.net/mweb//2021/09/14/16315998877426.jpg)
 
 
 ## ST的不足

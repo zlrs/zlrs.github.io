@@ -112,10 +112,10 @@ NSLog(@"%@", [request debug_VSCodeRESTClientPlugin_HTTP]);
 ```
 
 2.  在VSCode中打开一个http后缀名的文件，把输出的内容贴到xxx.http文件里。
-![](https://cdn.zlrs.site/mweb/2021/07/28/16274650141059.jpg)
+![](https://karl1b.blob.core.windows.net/mweb//2021/07/28/16274650141059.jpg)
 
 3.  在右键菜单中点击 sendRequest，就可以发出请求，并在右侧看到服务端的响应了。
-![](https://cdn.zlrs.site/mweb/2021/07/28/16274650346776.jpg)
+![](https://karl1b.blob.core.windows.net/mweb//2021/07/28/16274650346776.jpg)
 
 4.  如果请求参数需要调整，直接在文件中修改并重新发送请求即可。比如上面的截图中，服务端查询返回的是一个空数组。这时候我们就可以方便地修改请求query，很快就能查看修改后的效果。
 
@@ -131,9 +131,9 @@ NSLog(@"%@", [request debug_VSCodeRESTClientPlugin_cURL]);
 
 2.  可以复制到终端中使用，也可以在VSCode「REST Client」插件中调用。
 通过终端使用:
-![](https://cdn.zlrs.site/mweb/2021/07/28/16274650482513.jpg)
+![](https://karl1b.blob.core.windows.net/mweb//2021/07/28/16274650482513.jpg)
 通过「REST Client」插件使用：
-![](https://cdn.zlrs.site/mweb/2021/07/28/16274650604452.jpg)
+![](https://karl1b.blob.core.windows.net/mweb//2021/07/28/16274650604452.jpg)
 
 ## 其他
 

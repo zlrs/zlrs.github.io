@@ -24,7 +24,7 @@ tags: ProgramDesign
 ## 讨论实现：完全使用单例模式来实现
 经过以上两步我们分析完了AppLog SDK的功能点，并分出了用户界面层、数据库访问层、上报服务层和应用生命周期埋点层。我简单花了一个层级图表示层间的关系。（这张图不能完全反映软件的真实关系，比如若用户有手动触发上报的需求，则用户页面也需要依赖上报服务的上报接口，从而用户界面画成“L形”会更合适。但是这并不妨碍我们接下来的分析。）
 
- ![我们划分出的软件层级](https://cdn.zlrs.site/mweb/2021/08/14/16289281989139.jpg)
+ ![我们划分出的软件层级](https://karl1b.blob.core.windows.net/mweb//2021/08/14/16289281989139.jpg)
  
  因为每个层最少使用一个对象就可以完成，所以我们很容易想到用每个层都用一个单例。可以定义以下单例：
  * [AppLogSDK sharedInstance]
@@ -55,7 +55,7 @@ class AppLogSDKImpl {
    AppLogAppLifeCycleTrackInteface lifeCycleTrack
 }
 ```
-![组合设计模式形成的树形成员关系图](https://cdn.zlrs.site/mweb/2021/08/14/16289382645371.jpg)
+![组合设计模式形成的树形成员关系图](https://karl1b.blob.core.windows.net/mweb//2021/08/14/16289382645371.jpg)
 
 相比单例，这带来了以下好处
 * 方便搞清类间依赖关系。只需要阅读类的接口代码，就能知道其依赖。相关工具的开发也因此简便。

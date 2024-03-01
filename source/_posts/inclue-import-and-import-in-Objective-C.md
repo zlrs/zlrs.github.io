@@ -62,7 +62,7 @@ int main() {
 ```
 
 图：CI 对 Header Guard 过短给出的建议
-![-w850](https://cdn.zlrs.site/mweb/2021/07/27/16118301586367.jpg)
+![-w850](https://karl1b.blob.core.windows.net/mweb//2021/07/27/16118301586367.jpg)
 
 #### 规避方法(workaround)
 每次使用宏时都加上前缀，如项目名等，并且全用大写加下划线（因为一般符号很少全是大写的）。比如`#define FILE "data.txt"`，替换成`#define PROJECTNAME_DATA_FILE "data.txt"`。
@@ -78,7 +78,7 @@ int main() {
 ## @import
 我们可以先把目光从C系语言转移到JS、Python等语言。JS和Python都没有头文件，他们遵循的是modules的概念。一般`module`是一个文件，这个文件`export`出一些接口；其它文件可以`import`一个module，从而调用它暴露出来的接口。
 在python中，我们可以import一个module任意次，而且当Python VM启动之后，只有第一次引入时才会执行module文件，然后把该module缓存到一个哈希表中，随后的引用将直接从哈希表中取得module。JS的`require(module)`也是类似的原理。
-![python中可以import一个module任意次](https://cdn.zlrs.site/mweb/2021/01/23/16091712656983.jpg)
+![python中可以import一个module任意次](https://karl1b.blob.core.windows.net/mweb//2021/01/23/16091712656983.jpg)
 
 在iOS7(WWDC 2013)中，苹果为OC引入了modules机制，对应的关键字就是`@import`。
 OC的modules有以下特点：
@@ -86,16 +86,16 @@ OC的modules有以下特点：
 1. 不是文本插入(textual inclusion). 
 2. 第二次被`@import`的module不需要重新编译。大大提高了编译速度。（尤其对于那些不使用或不经常维护`pch`的项目）
 3. 通过`modulemap`文件关联umbrella头文件和module，并export submodule。顺便我们还可以在`modulemap`中写link指令，这样就可以自动链接上framework.
-![-w849](https://cdn.zlrs.site/mweb/2021/01/23/16091729424173.jpg)
+![-w849](https://karl1b.blob.core.windows.net/mweb//2021/01/23/16091729424173.jpg)
 由于modules的Auto-Link特性，我们的工程在`Build Phases`中不需要引入`UIKit.framwork`, `Foundation.framwork`等依赖。
-![-w856](https://cdn.zlrs.site/mweb/2021/01/23/16091731649362.jpg)
+![-w856](https://karl1b.blob.core.windows.net/mweb//2021/01/23/16091731649362.jpg)
 
 1. header is the truth。编译器最后做了什么，最后还是看header。类的接口也是依然写在header中，而不是`export`出来。
 2. Xcode 新项目默认开启modules。现有项目(iOS 7.0+)一般都开启了这个功能。开启后，若该头文件能通过modulemap对应到某个module，则这条`#import`会被视做`@import`。因此开发者在OC工程中写的对系统库头文件和Cocoapods组件头文件的`#import`(如`#import <MapKit/MapKit.h>`)，大多数情况下已经不是直接的文本插入了，而是被Xcode视作`@import`(`@import MapKit`）。
-![现有项目一般都开启了modules](https://cdn.zlrs.site/mweb/2021/01/23/16091727588022.jpg)
+![现有项目一般都开启了modules](https://karl1b.blob.core.windows.net/mweb//2021/01/23/16091727588022.jpg)
 
 1. 我们自己的SDK也可以使用module的特性。看起来cocoapods会帮助我们做这件事。
-![cocoapods自动生成的modulemap文件](https://cdn.zlrs.site/mweb/2021/01/23/16091734906367.jpg)
+![cocoapods自动生成的modulemap文件](https://karl1b.blob.core.windows.net/mweb//2021/01/23/16091734906367.jpg)
 
 更详细的可以看[WWDC2013-404 Advances in Objective-C](https://developer.apple.com/videos/play/wwdc2013/404/)和 StackOverflow: [@import vs #import - iOS 7](https://stackoverflow.com/questions/18947516/import-vs-import-ios-7)。
 
