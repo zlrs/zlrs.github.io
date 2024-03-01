@@ -29,7 +29,7 @@ https://github.com/0xxd0/objc4
 - 如果对象处理不了消息，还可以做消息转发
 ## 早期（1980s）的OC实现
 早期的OC就是一个预处理器地位的存在。将面向对象语法翻译为C语言，然后再交给C编译器去编译。
-![](https://cdn.zlrs.site/mweb/2021/09/14/16316113089181.jpg)
+![](https://https://karl1b.blob.core.windows.net/mweb/2021/09/14/16316113089181.jpg)
 
 ## runtime 版本
 Runtime 的实体是一个动态链接库(libobjc.dylib)。Objective-C语言很大程度上就是这个动态链接库。这个库主要有两个大版本：
@@ -91,7 +91,7 @@ if (zone) {
 ```
 ### new方法的早期实现
 节选自《Object-oriented programming : an evolutionary approach》
-![](https://cdn.zlrs.site/mweb/2021/09/14/16316112931084.jpg)
+![](https://https://karl1b.blob.core.windows.net/mweb/2021/09/14/16316112931084.jpg)
 
 ### 关于methodLists
 1. 注意：是methodLists而不是methodsList
@@ -214,21 +214,21 @@ OC中，方法可以被分为：
 4. 因此所有的方法，包括类方法和实例方法，最终都是派发到NSObject。
 5. 对象的isa指针指向其类对象。类对象的isa指针指向类对象的metaclass对象；super class指针指向超类。metaclass对象的isa指针指向NSObject的metaclas对象。
 ### 对象图
-![](https://cdn.zlrs.site/mweb/2021/09/14/16316113683323.jpg)
+![](https://https://karl1b.blob.core.windows.net/mweb/2021/09/14/16316113683323.jpg)
 
 
 ### 对象图（早期实现）
-![](https://cdn.zlrs.site/mweb/2021/09/14/16316113769760.jpg)
+![](https://https://karl1b.blob.core.windows.net/mweb/2021/09/14/16316113769760.jpg)
 
 
 下面这张图节选自《Object-oriented programming : an evolutionary approach》，其中 Pen Software IC 指的就是Pen类。
 
 ### 实例的消息派发
-![](https://cdn.zlrs.site/mweb/2021/09/14/16316113875747.jpg)
+![](https://https://karl1b.blob.core.windows.net/mweb/2021/09/14/16316113875747.jpg)
 
 
 ### 类对象的消息派发
-![](https://cdn.zlrs.site/mweb/2021/09/14/16316114039154.jpg)
+![](https://https://karl1b.blob.core.windows.net/mweb/2021/09/14/16316114039154.jpg)
 
 
 ## 动态绑定与消息机制
@@ -346,7 +346,7 @@ https://stackoverflow.com/questions/8733104/objective-c-property-instance-variab
 ### KVO
 观察者模式
 原理：通过isa Swizzling添加中间类；中间类重写setter，给观察者发送属性变更通知、重写class方法返回原本的父类以隐藏自己。
-![](https://cdn.zlrs.site/mweb/2021/09/14/16316115725874.jpg)
+![](https://https://karl1b.blob.core.windows.net/mweb/2021/09/14/16316115725874.jpg)
 
 ### Method Swizzling
 #### Getting a Method's Address
@@ -394,7 +394,7 @@ NSLog(@"call uppercaseString: %@", [str uppercaseString]);
 
 ### Super
 #### 问题
-![](https://cdn.zlrs.site/mweb/2021/09/14/16316116657873.jpg)
+![](https://https://karl1b.blob.core.windows.net/mweb/2021/09/14/16316116657873.jpg)
 
 #### 分析
 分析下面这段代码。
