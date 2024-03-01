@@ -386,8 +386,8 @@
 <p>应当被理解为：向对象2发送消息+，参数为对象3。</p>
 <p>SmallTalk的面向对象是如此的彻底，甚至于连条件判断、循环等功能都是由类提供的。</p>
 <p>许多现代概念都可以在古老的SmallTalk中找到，比如metaclass、tagged pointer、消息机制等。</p>
-<h2 id="ST-语法示例"><a href="#ST-语法示例" class="headerlink" title="ST 语法示例"></a>ST 语法示例</h2><p><img src="https://cdn.zlrs.site/mweb/2021/09/14/16315997831842.jpg"></p>
-<h2 id="SmallTalk-80-IDE"><a href="#SmallTalk-80-IDE" class="headerlink" title="SmallTalk-80 IDE"></a>SmallTalk-80 IDE</h2><p>ST 的 IDE 对现代 IDE 也影响深远<br>ST-80 IDE已经具备了代码编辑、文件浏览器、符号浏览器等基础功能：<br><img src="https://cdn.zlrs.site/mweb/2021/09/14/16315998877426.jpg"></p>
+<h2 id="ST-语法示例"><a href="#ST-语法示例" class="headerlink" title="ST 语法示例"></a>ST 语法示例</h2><p><img src="https://karl1b.blob.core.windows.net/mweb//2021/09/14/16315997831842.jpg"></p>
+<h2 id="SmallTalk-80-IDE"><a href="#SmallTalk-80-IDE" class="headerlink" title="SmallTalk-80 IDE"></a>SmallTalk-80 IDE</h2><p>ST 的 IDE 对现代 IDE 也影响深远<br>ST-80 IDE已经具备了代码编辑、文件浏览器、符号浏览器等基础功能：<br><img src="https://karl1b.blob.core.windows.net/mweb//2021/09/14/16315998877426.jpg"></p>
 <h2 id="ST的不足"><a href="#ST的不足" class="headerlink" title="ST的不足"></a>ST的不足</h2><p>它最初是以研究为目的开发的，在执行效率、商业推广等存在不足。</p>
 
       
@@ -535,7 +535,7 @@
 <li><code>DEVELOPER_DIR</code>环境变量：用于指定当前环境的toolchain路径。可以覆盖系统级别的toolchain路径。</li>
 </ol>
 <p>toolchain的路径一般在Xcode APP中，如<code>/Application/Xcode.app/Contents/Developer</code>（也可以写成<code>/Application/Xcode.app</code>，<code>xcode-select</code>会自动添加后面的部分）. 或者单独存在。</p>
-<p>开发者也可以在Xcode IDE中切换系统级的toolchain（Command Line Tools）. 切换时需要指纹验证来获取sudo权限。其底层应该也是通过调用<code>xcode-select</code>实现。<br><img src="https://cdn.zlrs.site/mweb/2021/08/31/16285887284120.jpg" alt="-w942"></p>
+<p>开发者也可以在Xcode IDE中切换系统级的toolchain（Command Line Tools）. 切换时需要指纹验证来获取sudo权限。其底层应该也是通过调用<code>xcode-select</code>实现。<br><img src="https://karl1b.blob.core.windows.net/mweb//2021/08/31/16285887284120.jpg" alt="-w942"></p>
 <p><strong>配合桩命令和<code>xcode-select</code>，就可以方便地切换toolchain。</strong><br>举个例子：假设我们在编译脚本中存在这样一行</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">xcodebuild xxx.c -xxxx  # 参数省略</span><br></pre></td></tr></table></figure>
 <p>一般来说，<code>xcodebuild</code>会被解析到桩命令<code>/usr/bin/xcodebuild</code>，桩命令再调到当前toolchain的<code>xcodebuild</code>。</p>
@@ -616,7 +616,7 @@
 </li>
 </ul>
 <h2 id="讨论实现：完全使用单例模式来实现"><a href="#讨论实现：完全使用单例模式来实现" class="headerlink" title="讨论实现：完全使用单例模式来实现"></a>讨论实现：完全使用单例模式来实现</h2><p>经过以上两步我们分析完了AppLog SDK的功能点，并分出了用户界面层、数据库访问层、上报服务层和应用生命周期埋点层。我简单花了一个层级图表示层间的关系。（这张图不能完全反映软件的真实关系，比如若用户有手动触发上报的需求，则用户页面也需要依赖上报服务的上报接口，从而用户界面画成“L形”会更合适。但是这并不妨碍我们接下来的分析。）</p>
-<p> <img src="https://cdn.zlrs.site/mweb/2021/08/14/16289281989139.jpg" alt="我们划分出的软件层级"></p>
+<p> <img src="https://karl1b.blob.core.windows.net/mweb//2021/08/14/16289281989139.jpg" alt="我们划分出的软件层级"></p>
 <p> 因为每个层最少使用一个对象就可以完成，所以我们很容易想到用每个层都用一个单例。可以定义以下单例：</p>
 <ul>
 <li>[AppLogSDK sharedInstance]</li>
@@ -641,7 +641,7 @@
 </blockquote>
 <p>在功能上，SDK的各个功能是由各个子模块的功能所组成的。在程序结构上，SDK的主类对象也可以是由多个子模块的对象所组成。成员类型可以是Inteface或者抽象类。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">class AppLogSDKImpl &#123;</span><br><span class="line">   &#x2F;&#x2F; instance properties</span><br><span class="line">   AppLogDAOInteface dao,</span><br><span class="line">   AppLogReportServiceInteface reportService,</span><br><span class="line">   AppLogAppLifeCycleTrackInteface lifeCycleTrack</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><img src="https://cdn.zlrs.site/mweb/2021/08/14/16289382645371.jpg" alt="组合设计模式形成的树形成员关系图"></p>
+<p><img src="https://karl1b.blob.core.windows.net/mweb//2021/08/14/16289382645371.jpg" alt="组合设计模式形成的树形成员关系图"></p>
 <p>相比单例，这带来了以下好处</p>
 <ul>
 <li>方便搞清类间依赖关系。只需要阅读类的接口代码，就能知道其依赖。相关工具的开发也因此简便。</li>
@@ -696,11 +696,11 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">zlrs@C02D ~&#x2F;B&#x2F;P&#x2F;b&#x2F;t&#x2F;tulsi (master)&gt; which git </span><br><span class="line">&#x2F;usr&#x2F;bin&#x2F;git</span><br><span class="line">zlrs@C02D ~&#x2F;B&#x2F;P&#x2F;b&#x2F;t&#x2F;tulsi (master)&gt; ls -l (which git)</span><br><span class="line">-rwxr-xr-x  1 root  wheel  137616  1  1  2020 &#x2F;usr&#x2F;bin&#x2F;git</span><br></pre></td></tr></table></figure>
 <p>但是，在未安装Command Line Tools的情况下，虽然<code>/usr/bin/git</code>存在，但是依然无法使用git的。如果调用git，将提示未安装Command Line Tools并exit。</p>
 <p>实际上<code>/usr/bin/git</code>并非真实的git程序。<code>/usr/bin/git</code>只是一个桩，实际上是调用xcrun去执行当前Xcode Developer directory中的git（如<code>/Applications/Xcode.app/Contents/Developer/usr/bin/git</code>）. </p>
-<p>做一个简单的实验，通过DEVELOPER_DIR环境变量指定Xcode Developer directory之后，可以发现xcrun无法找到真正的git命令的路径。<br><img src="https://cdn.zlrs.site/mweb/2021/08/06/16282457725258.jpg" alt="-w734"></p>
+<p>做一个简单的实验，通过DEVELOPER_DIR环境变量指定Xcode Developer directory之后，可以发现xcrun无法找到真正的git命令的路径。<br><img src="https://karl1b.blob.core.windows.net/mweb//2021/08/06/16282457725258.jpg" alt="-w734"></p>
 <p>这一点也可以通过追踪<code>/usr/bin/git</code>的系统调用来验证。追踪前需要先移除桩二进制的签名。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mv &#x2F;usr&#x2F;bin&#x2F;git .&#x2F;</span><br><span class="line">sudo codesign --remove-signature .&#x2F;git</span><br><span class="line">sudo dtruss .&#x2F;git -h</span><br></pre></td></tr></table></figure>
-<p><img src="https://cdn.zlrs.site/mweb/2021/08/06/16282465341716.jpg" alt="-w1625"></p>
-<p><img src="https://cdn.zlrs.site/mweb/2021/08/06/16282465142731.jpg" alt="-w1481"></p>
+<p><img src="https://karl1b.blob.core.windows.net/mweb//2021/08/06/16282465341716.jpg" alt="-w1625"></p>
+<p><img src="https://karl1b.blob.core.windows.net/mweb//2021/08/06/16282465142731.jpg" alt="-w1481"></p>
 <p>完整代码见<a target="_blank" rel="noopener" href="https://gist.github.com/zlrs/4aa3f284eb0cb23fb2e1da0b16945814">gist</a>. </p>
 <script src="https://gist.github.com/zlrs/4aa3f284eb0cb23fb2e1da0b16945814.js"></script>
 
@@ -744,7 +744,7 @@
 <li>在Xcode GUI中安装</li>
 </ul>
 <p>小结：Xcode和Command Line Tools的关系是：Command Line Tools是Xcode的一部分，但是完全可以单独使用。比如你可以在mac构建机上不安装Xcode APP，只安装Command Line Tools。</p>
-<p>为了减少大家每一篇的阅读时间，我把这个系列分成了5篇（暂定）。在下一篇文章里，我将通过探索<code>git -h</code>命令运行的例子，来正式开启我们这个系列的学习。<br><img src="https://cdn.zlrs.site/mweb/2021/08/06/16282399579998.jpg" alt="-w1302"></p>
+<p>为了减少大家每一篇的阅读时间，我把这个系列分成了5篇（暂定）。在下一篇文章里，我将通过探索<code>git -h</code>命令运行的例子，来正式开启我们这个系列的学习。<br><img src="https://karl1b.blob.core.windows.net/mweb//2021/08/06/16282399579998.jpg" alt="-w1302"></p>
 <p>Reference:</p>
 <ul>
 <li><a target="_blank" rel="noopener" href="https://developer.apple.com/download/all/">苹果开发者下载中心</a></li>
@@ -802,9 +802,9 @@
 </ol>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">NSMutableURLRequest *request &#x3D; xxx;</span><br><span class="line"></span><br><span class="line">NSLog(@&quot;%@&quot;, [request debug_VSCodeRESTClientPlugin_HTTP]);</span><br></pre></td></tr></table></figure>
 <ol start="2">
-<li><p> 在VSCode中打开一个http后缀名的文件，把输出的内容贴到xxx.http文件里。<br><img src="https://cdn.zlrs.site/mweb/2021/07/28/16274650141059.jpg"></p>
+<li><p> 在VSCode中打开一个http后缀名的文件，把输出的内容贴到xxx.http文件里。<br><img src="https://karl1b.blob.core.windows.net/mweb//2021/07/28/16274650141059.jpg"></p>
 </li>
-<li><p> 在右键菜单中点击 sendRequest，就可以发出请求，并在右侧看到服务端的响应了。<br><img src="https://cdn.zlrs.site/mweb/2021/07/28/16274650346776.jpg"></p>
+<li><p> 在右键菜单中点击 sendRequest，就可以发出请求，并在右侧看到服务端的响应了。<br><img src="https://karl1b.blob.core.windows.net/mweb//2021/07/28/16274650346776.jpg"></p>
 </li>
 <li><p> 如果请求参数需要调整，直接在文件中修改并重新发送请求即可。比如上面的截图中，服务端查询返回的是一个空数组。这时候我们就可以方便地修改请求query，很快就能查看修改后的效果。</p>
 </li>
@@ -814,7 +814,7 @@
 </ol>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">NSMutableURLRequest *request &#x3D; xxx;</span><br><span class="line"></span><br><span class="line">NSLog(@&quot;%@&quot;, [request debug_VSCodeRESTClientPlugin_cURL]);</span><br></pre></td></tr></table></figure>
 <ol start="2">
-<li> 可以复制到终端中使用，也可以在VSCode「REST Client」插件中调用。<br>通过终端使用:<br><img src="https://cdn.zlrs.site/mweb/2021/07/28/16274650482513.jpg"><br>通过「REST Client」插件使用：<br><img src="https://cdn.zlrs.site/mweb/2021/07/28/16274650604452.jpg"></li>
+<li> 可以复制到终端中使用，也可以在VSCode「REST Client」插件中调用。<br>通过终端使用:<br><img src="https://karl1b.blob.core.windows.net/mweb//2021/07/28/16274650482513.jpg"><br>通过「REST Client」插件使用：<br><img src="https://karl1b.blob.core.windows.net/mweb//2021/07/28/16274650604452.jpg"></li>
 </ol>
 <h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p>目前只考虑到了HTTPBody为文本的情况，如果HTTPBody是二进制就需要自己修改下分类代码。</p>
 
@@ -882,25 +882,25 @@
 <h4 id="规避方法-workaround"><a href="#规避方法-workaround" class="headerlink" title="规避方法(workaround)"></a>规避方法(workaround)</h4><p>Header guard.</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// add.h</span></span><br><span class="line"><span class="comment">// Header Guard有项目名前缀+文件名前缀，是为了避免一不小心把源代码给替换了。</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifndef</span> PROJECTNAME_ADD_HEADER_GUARD</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> PROJECTNAME_ADD_HEADER_GUARD</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">inline</span> <span class="keyword">int</span> <span class="title">add</span><span class="params">(<span class="keyword">int</span> a, <span class="keyword">int</span> b)</span> </span>&#123; <span class="keyword">return</span> a + b; &#125;;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br></pre></td></tr></table></figure>
 <h3 id="缺点2：宏替换问题"><a href="#缺点2：宏替换问题" class="headerlink" title="缺点2：宏替换问题"></a>缺点2：宏替换问题</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> FILE <span class="meta-string">&quot;data.txt&quot;</span>  <span class="comment">// 本来我只想在本文件中使用这个宏</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;  // 但是没想到 stdio.h 里的 FILE 也被替换成 &quot;data.txt&quot; 了</span></span></span><br><span class="line"><span class="comment">// 编译器会报一些很难理解的错误。</span></span><br><span class="line"><span class="comment">/* </span></span><br><span class="line"><span class="comment">/usr/include/stdio.h:195:34: error: expected constructor, destructor, or type conversion before ‘;’ token</span></span><br><span class="line"><span class="comment"> extern FILE *tmpfile (void) __wur;</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 读取 FILE 文件</span></span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>图：CI 对 Header Guard 过短给出的建议<br><img src="https://cdn.zlrs.site/mweb/2021/07/27/16118301586367.jpg" alt="-w850"></p>
+<p>图：CI 对 Header Guard 过短给出的建议<br><img src="https://karl1b.blob.core.windows.net/mweb//2021/07/27/16118301586367.jpg" alt="-w850"></p>
 <h4 id="规避方法-workaround-1"><a href="#规避方法-workaround-1" class="headerlink" title="规避方法(workaround)"></a>规避方法(workaround)</h4><p>每次使用宏时都加上前缀，如项目名等，并且全用大写加下划线（因为一般符号很少全是大写的）。比如<code>#define FILE &quot;data.txt&quot;</code>，替换成<code>#define PROJECTNAME_DATA_FILE &quot;data.txt&quot;</code>。</p>
 <h3 id="缺点3：影响编译速度"><a href="#缺点3：影响编译速度" class="headerlink" title="缺点3：影响编译速度"></a>缺点3：影响编译速度</h3><p>(1) 头文件是嵌套<code>#include</code>的。一行普通的<code>#include &lt;stdio.h&gt;</code>，完全展开后可能有几千几万行代码。由于代码量很大，所以编译很耗时。<br>(2) 如果第(1)点的编译耗时是一次性的，那还可以接受。但是工程中有这样的情况: 几乎每个编译单元（源文件）都要引入同一个头文件，比如 <code>UIKit.h</code>。编译单元之间对头文件的编译产物无法复用。假如工程中有M个源文件，N个头文件，则项目的编译最多可以达到 MxN 的复杂度。这样的项目是非拓展性的(unscaleable)。</p>
 <h4 id="规避方法-workaround-2"><a href="#规避方法-workaround-2" class="headerlink" title="规避方法(workaround)"></a>规避方法(workaround)</h4><p>使用pch(precompiled header). pch解决了上面提到的第(2)个问题。程序员将一些共用的头文件写在<code>.pch</code>文件中。<code>.pch</code>中的头文件会被预先编译好，并在每个源文件中默认引入。<code>pch</code>的确提高了编译速度。但是<code>pch</code>由于会被默认引入到每个源文件，这个解法其实很不好，因为它带来了名字空间污染(namespace polution)。</p>
 <h2 id="import"><a href="#import" class="headerlink" title="#import"></a>#import</h2><p><code>#import</code>是Objective-C预处理器引入的一个特性。它仍然是文本插入，但是可以保证同一个编译单元中，同一头文件的内容只被插入一次。<br>更详细的可以看StackOverflow: <a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/439662/what-is-the-difference-between-import-and-include-in-objective-c">What is the difference between #import and #include in Objective-C?</a>。</p>
-<h2 id="import-1"><a href="#import-1" class="headerlink" title="@import"></a>@import</h2><p>我们可以先把目光从C系语言转移到JS、Python等语言。JS和Python都没有头文件，他们遵循的是modules的概念。一般<code>module</code>是一个文件，这个文件<code>export</code>出一些接口；其它文件可以<code>import</code>一个module，从而调用它暴露出来的接口。<br>在python中，我们可以import一个module任意次，而且当Python VM启动之后，只有第一次引入时才会执行module文件，然后把该module缓存到一个哈希表中，随后的引用将直接从哈希表中取得module。JS的<code>require(module)</code>也是类似的原理。<br><img src="https://cdn.zlrs.site/mweb/2021/01/23/16091712656983.jpg" alt="python中可以import一个module任意次"></p>
+<h2 id="import-1"><a href="#import-1" class="headerlink" title="@import"></a>@import</h2><p>我们可以先把目光从C系语言转移到JS、Python等语言。JS和Python都没有头文件，他们遵循的是modules的概念。一般<code>module</code>是一个文件，这个文件<code>export</code>出一些接口；其它文件可以<code>import</code>一个module，从而调用它暴露出来的接口。<br>在python中，我们可以import一个module任意次，而且当Python VM启动之后，只有第一次引入时才会执行module文件，然后把该module缓存到一个哈希表中，随后的引用将直接从哈希表中取得module。JS的<code>require(module)</code>也是类似的原理。<br><img src="https://karl1b.blob.core.windows.net/mweb//2021/01/23/16091712656983.jpg" alt="python中可以import一个module任意次"></p>
 <p>在iOS7(WWDC 2013)中，苹果为OC引入了modules机制，对应的关键字就是<code>@import</code>。<br>OC的modules有以下特点：</p>
 <ol>
 <li><p>不是文本插入(textual inclusion). </p>
 </li>
 <li><p>第二次被<code>@import</code>的module不需要重新编译。大大提高了编译速度。（尤其对于那些不使用或不经常维护<code>pch</code>的项目）</p>
 </li>
-<li><p>通过<code>modulemap</code>文件关联umbrella头文件和module，并export submodule。顺便我们还可以在<code>modulemap</code>中写link指令，这样就可以自动链接上framework.<br><img src="https://cdn.zlrs.site/mweb/2021/01/23/16091729424173.jpg" alt="-w849"><br>由于modules的Auto-Link特性，我们的工程在<code>Build Phases</code>中不需要引入<code>UIKit.framwork</code>, <code>Foundation.framwork</code>等依赖。<br><img src="https://cdn.zlrs.site/mweb/2021/01/23/16091731649362.jpg" alt="-w856"></p>
+<li><p>通过<code>modulemap</code>文件关联umbrella头文件和module，并export submodule。顺便我们还可以在<code>modulemap</code>中写link指令，这样就可以自动链接上framework.<br><img src="https://karl1b.blob.core.windows.net/mweb//2021/01/23/16091729424173.jpg" alt="-w849"><br>由于modules的Auto-Link特性，我们的工程在<code>Build Phases</code>中不需要引入<code>UIKit.framwork</code>, <code>Foundation.framwork</code>等依赖。<br><img src="https://karl1b.blob.core.windows.net/mweb//2021/01/23/16091731649362.jpg" alt="-w856"></p>
 </li>
 <li><p>header is the truth。编译器最后做了什么，最后还是看header。类的接口也是依然写在header中，而不是<code>export</code>出来。</p>
 </li>
-<li><p>Xcode 新项目默认开启modules。现有项目(iOS 7.0+)一般都开启了这个功能。开启后，若该头文件能通过modulemap对应到某个module，则这条<code>#import</code>会被视做<code>@import</code>。因此开发者在OC工程中写的对系统库头文件和Cocoapods组件头文件的<code>#import</code>(如<code>#import &lt;MapKit/MapKit.h&gt;</code>)，大多数情况下已经不是直接的文本插入了，而是被Xcode视作<code>@import</code>(<code>@import MapKit</code>）。<br><img src="https://cdn.zlrs.site/mweb/2021/01/23/16091727588022.jpg" alt="现有项目一般都开启了modules"></p>
+<li><p>Xcode 新项目默认开启modules。现有项目(iOS 7.0+)一般都开启了这个功能。开启后，若该头文件能通过modulemap对应到某个module，则这条<code>#import</code>会被视做<code>@import</code>。因此开发者在OC工程中写的对系统库头文件和Cocoapods组件头文件的<code>#import</code>(如<code>#import &lt;MapKit/MapKit.h&gt;</code>)，大多数情况下已经不是直接的文本插入了，而是被Xcode视作<code>@import</code>(<code>@import MapKit</code>）。<br><img src="https://karl1b.blob.core.windows.net/mweb//2021/01/23/16091727588022.jpg" alt="现有项目一般都开启了modules"></p>
 </li>
-<li><p>我们自己的SDK也可以使用module的特性。看起来cocoapods会帮助我们做这件事。<br><img src="https://cdn.zlrs.site/mweb/2021/01/23/16091734906367.jpg" alt="cocoapods自动生成的modulemap文件"></p>
+<li><p>我们自己的SDK也可以使用module的特性。看起来cocoapods会帮助我们做这件事。<br><img src="https://karl1b.blob.core.windows.net/mweb//2021/01/23/16091734906367.jpg" alt="cocoapods自动生成的modulemap文件"></p>
 </li>
 </ol>
 <p>更详细的可以看<a target="_blank" rel="noopener" href="https://developer.apple.com/videos/play/wwdc2013/404/">WWDC2013-404 Advances in Objective-C</a>和 StackOverflow: <a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/18947516/import-vs-import-ios-7">@import vs #import - iOS 7</a>。</p>

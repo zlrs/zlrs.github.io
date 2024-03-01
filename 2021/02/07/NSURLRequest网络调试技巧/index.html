@@ -88,9 +88,9 @@
 </ol>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">NSMutableURLRequest *request &#x3D; xxx;</span><br><span class="line"></span><br><span class="line">NSLog(@&quot;%@&quot;, [request debug_VSCodeRESTClientPlugin_HTTP]);</span><br></pre></td></tr></table></figure>
 <ol start="2">
-<li><p> 在VSCode中打开一个http后缀名的文件，把输出的内容贴到xxx.http文件里。<br><img src="https://cdn.zlrs.site/mweb/2021/07/28/16274650141059.jpg"></p>
+<li><p> 在VSCode中打开一个http后缀名的文件，把输出的内容贴到xxx.http文件里。<br><img src="https://karl1b.blob.core.windows.net/mweb//2021/07/28/16274650141059.jpg"></p>
 </li>
-<li><p> 在右键菜单中点击 sendRequest，就可以发出请求，并在右侧看到服务端的响应了。<br><img src="https://cdn.zlrs.site/mweb/2021/07/28/16274650346776.jpg"></p>
+<li><p> 在右键菜单中点击 sendRequest，就可以发出请求，并在右侧看到服务端的响应了。<br><img src="https://karl1b.blob.core.windows.net/mweb//2021/07/28/16274650346776.jpg"></p>
 </li>
 <li><p> 如果请求参数需要调整，直接在文件中修改并重新发送请求即可。比如上面的截图中，服务端查询返回的是一个空数组。这时候我们就可以方便地修改请求query，很快就能查看修改后的效果。</p>
 </li>
@@ -100,7 +100,7 @@
 </ol>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">NSMutableURLRequest *request &#x3D; xxx;</span><br><span class="line"></span><br><span class="line">NSLog(@&quot;%@&quot;, [request debug_VSCodeRESTClientPlugin_cURL]);</span><br></pre></td></tr></table></figure>
 <ol start="2">
-<li> 可以复制到终端中使用，也可以在VSCode「REST Client」插件中调用。<br>通过终端使用:<br><img src="https://cdn.zlrs.site/mweb/2021/07/28/16274650482513.jpg"><br>通过「REST Client」插件使用：<br><img src="https://cdn.zlrs.site/mweb/2021/07/28/16274650604452.jpg"></li>
+<li> 可以复制到终端中使用，也可以在VSCode「REST Client」插件中调用。<br>通过终端使用:<br><img src="https://karl1b.blob.core.windows.net/mweb//2021/07/28/16274650482513.jpg"><br>通过「REST Client」插件使用：<br><img src="https://karl1b.blob.core.windows.net/mweb//2021/07/28/16274650604452.jpg"></li>
 </ol>
 <h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p>目前只考虑到了HTTPBody为文本的情况，如果HTTPBody是二进制就需要自己修改下分类代码。</p>
 

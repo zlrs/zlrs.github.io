@@ -68,11 +68,11 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">zlrs@C02D ~&#x2F;B&#x2F;P&#x2F;b&#x2F;t&#x2F;tulsi (master)&gt; which git </span><br><span class="line">&#x2F;usr&#x2F;bin&#x2F;git</span><br><span class="line">zlrs@C02D ~&#x2F;B&#x2F;P&#x2F;b&#x2F;t&#x2F;tulsi (master)&gt; ls -l (which git)</span><br><span class="line">-rwxr-xr-x  1 root  wheel  137616  1  1  2020 &#x2F;usr&#x2F;bin&#x2F;git</span><br></pre></td></tr></table></figure>
 <p>但是，在未安装Command Line Tools的情况下，虽然<code>/usr/bin/git</code>存在，但是依然无法使用git的。如果调用git，将提示未安装Command Line Tools并exit。</p>
 <p>实际上<code>/usr/bin/git</code>并非真实的git程序。<code>/usr/bin/git</code>只是一个桩，实际上是调用xcrun去执行当前Xcode Developer directory中的git（如<code>/Applications/Xcode.app/Contents/Developer/usr/bin/git</code>）. </p>
-<p>做一个简单的实验，通过DEVELOPER_DIR环境变量指定Xcode Developer directory之后，可以发现xcrun无法找到真正的git命令的路径。<br><img src="https://cdn.zlrs.site/mweb/2021/08/06/16282457725258.jpg" alt="-w734"></p>
+<p>做一个简单的实验，通过DEVELOPER_DIR环境变量指定Xcode Developer directory之后，可以发现xcrun无法找到真正的git命令的路径。<br><img src="https://karl1b.blob.core.windows.net/mweb//2021/08/06/16282457725258.jpg" alt="-w734"></p>
 <p>这一点也可以通过追踪<code>/usr/bin/git</code>的系统调用来验证。追踪前需要先移除桩二进制的签名。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mv &#x2F;usr&#x2F;bin&#x2F;git .&#x2F;</span><br><span class="line">sudo codesign --remove-signature .&#x2F;git</span><br><span class="line">sudo dtruss .&#x2F;git -h</span><br></pre></td></tr></table></figure>
-<p><img src="https://cdn.zlrs.site/mweb/2021/08/06/16282465341716.jpg" alt="-w1625"></p>
-<p><img src="https://cdn.zlrs.site/mweb/2021/08/06/16282465142731.jpg" alt="-w1481"></p>
+<p><img src="https://karl1b.blob.core.windows.net/mweb//2021/08/06/16282465341716.jpg" alt="-w1625"></p>
+<p><img src="https://karl1b.blob.core.windows.net/mweb//2021/08/06/16282465142731.jpg" alt="-w1481"></p>
 <p>完整代码见<a target="_blank" rel="noopener" href="https://gist.github.com/zlrs/4aa3f284eb0cb23fb2e1da0b16945814">gist</a>. </p>
 <script src="https://gist.github.com/zlrs/4aa3f284eb0cb23fb2e1da0b16945814.js"></script>
 
